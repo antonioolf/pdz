@@ -2,45 +2,48 @@ package com.oliveiralabs.pdz.others
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.oliveiralabs.pdz.R
 import com.oliveiralabs.pdz.adapters.RepoItemAdapter
-import com.oliveiralabs.pdz.models.RepoItem
-import org.json.JSONArray
 
 /*
-* O limite de arquivos para a listagem recursiva do Github é 100.000
-* https://github.community/t/github-get-tree-api-limits-and-recursivity/1300/2
-*
-*
-* requests em loop: https://stackoverflow.com/a/60881752
-*
-* */
+ * O limite de arquivos para a listagem recursiva do Github é 100.000
+ * https://github.community/t/github-get-tree-api-limits-and-recursivity/1300/2
+ *
+ *
+ * requests em loop: https://stackoverflow.com/a/60881752
+ *
+ * Tutorial
+ * https://medium.com/@tguizelini/android-mvvm-retrofit-coroutines-s2-7f09bce0ad0c
+ *
+ * Teste
+ * https://medium.com/@q2ad/testing-retrofit-kotlin-coroutines-c7849e960ed8
+ *
+ */
 
-class MainActivity : AppCompatActivity(), GithubApi.RequestCallback {
+class MainActivity : AppCompatActivity() {
+    lateinit var viewModel: MainViewModel
+    private val repoItemAdapter = RepoItemAdapter(arrayListOf())
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-/*        val api = GithubApi(this, this)
-        api.getAllFiles("antonioolf/formulas-antonio", "master")
-        api.getRepoContent("antonioolf/formulas-antonio", "master")*/
+        viewModel = ViewModelProvider(this).get(MainViewModel::class.java)
 
-        val rvItemRit = findViewById<RecyclerView>(R.id.rvItemRit)
-        rvItemRit.layoutManager = LinearLayoutManager(this)
+        findViewById<RecyclerView>(R.id.rvItemRit).apply {
+            layoutManager = LinearLayoutManager(context)
+            adapter = repoItemAdapter
+        }
 
-        val data = arrayOf(RepoItem("Makefile", true), RepoItem("Dockerfile", true), RepoItem("formula", false))
+        viewModel.fetchRepoItems("antonioolf","cdi", "master")
 
-        rvItemRit.adapter = RepoItemAdapter(data)
-
-    }
-
-    override fun getAllFilesResponse(response: String) {
-        val files = JSONArray(response)
-    }
-
-    override fun getRepoContentResponse(response: String) {
-        TODO("Not yet implemented")
+        viewModel.items.observe(this, { repoItems ->
+            repoItems?.let {
+                repoItemAdapter.update(it)
+            }
+        })
     }
 }

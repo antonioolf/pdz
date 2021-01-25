@@ -1,49 +1,15 @@
 package com.oliveiralabs.pdz.others
 
-import android.content.Context
-import android.widget.Toast
-import com.android.volley.Request
-import com.android.volley.RequestQueue
-import com.android.volley.toolbox.StringRequest
-import com.android.volley.toolbox.Volley
+import com.oliveiralabs.pdz.models.RepoItem
+import retrofit2.Response
+import retrofit2.http.GET
+import retrofit2.http.Path
 
-class GithubApi(context: Context, listener: RequestCallback) {
-    private var ctx: Context = context
-    private var requestListener: RequestCallback = listener
+interface GithubApi {
 
-    private var queue: RequestQueue
-    private val baseUrl :String = "https://api.github.com"
+    @GET("repos/{userRepo}/git/trees/{branch}?recursive=1")
+    suspend fun getRepoContent(@Path("userRepo") userRepo: String, @Path("branch") branch :String): Response<List<RepoItem>>
 
-    interface RequestCallback {
-        fun getAllFilesResponse(response :String)
-        fun getRepoContentResponse(response :String)
-    }
-
-    init {
-        queue = Volley.newRequestQueue(ctx)
-    }
-
-    fun getAllFiles(userRepo :String, branch :String) {
-
-        val stringRequest = StringRequest(Request.Method.GET, "$baseUrl/repos/$userRepo/git/trees/${branch}?recursive=1", { response ->
-            requestListener.getAllFilesResponse(response.toString())
-        }, { err ->
-            Toast.makeText(ctx, err.toString(), Toast.LENGTH_SHORT).show()
-            requestListener.getAllFilesResponse("[]")
-        })
-
-        queue.add(stringRequest)
-    }
-
-    fun getRepoContent(userRepo :String, path :String) {
-
-        val stringRequest = StringRequest(Request.Method.GET, "$baseUrl/repos/$userRepo/contents/${path}", { response ->
-            requestListener.getRepoContentResponse(response.toString())
-        }, { err ->
-            requestListener.getRepoContentResponse(err.toString())
-        })
-
-        queue.add(stringRequest)
-    }
-
+    @GET
+    suspend fun getInfo(): Response<String>
 }

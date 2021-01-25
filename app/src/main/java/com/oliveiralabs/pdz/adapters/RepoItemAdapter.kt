@@ -3,48 +3,33 @@ package com.oliveiralabs.pdz.adapters
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.oliveiralabs.pdz.R
 import com.oliveiralabs.pdz.models.RepoItem
+import kotlinx.android.synthetic.main.repo_item.view.*
 
-/*
-* Representa uma fórmula ou um grupo de fórmulas
-*/
-class RepoItemAdapter (private val dataSet: Array<RepoItem>) :
-            RecyclerView.Adapter<RepoItemAdapter.ViewHolder>() {
+class RepoItemAdapter(private val items: ArrayList<RepoItem>) : RecyclerView.Adapter<RepoItemAdapter.ViewHolder>() {
+    class ViewHolder(view: View): RecyclerView.ViewHolder(view) {
+        private val name = view.name
 
-        /**
-         * Provide a reference to the type of views that you are using
-         * (custom ViewHolder).
-         */
-        class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-            val textView: TextView
-
-            init {
-                // Define click listener for the ViewHolder's View.
-                textView = view.findViewById(R.id.textView)
-            }
+        fun bind(repoItem: RepoItem) {
+            name.text = repoItem.name
         }
-
-        // Create new views (invoked by the layout manager)
-        override fun onCreateViewHolder(viewGroup: ViewGroup, viewType: Int): ViewHolder {
-            // Create a new view, which defines the UI of the list item
-            val view = LayoutInflater.from(viewGroup.context)
-                    .inflate(R.layout.repo_item, viewGroup, false)
-
-            return ViewHolder(view)
-        }
-
-        // Replace the contents of a view (invoked by the layout manager)
-        override fun onBindViewHolder(viewHolder: ViewHolder, position: Int) {
-
-            // Get element from your dataset at this position and replace the
-            // contents of the view with that element
-            viewHolder.textView.text = dataSet[position].name
-        }
-
-        // Return the size of your dataset (invoked by the layout manager)
-        override fun getItemCount() = dataSet.size
-
     }
+
+    fun update(repoItems: List<RepoItem>) {
+        items.clear()
+        items.addAll(repoItems)
+        notifyDataSetChanged()
+    }
+
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+        holder.bind(items[position])
+    }
+
+    override fun getItemCount(): Int = items.size
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = ViewHolder(
+        LayoutInflater.from(parent.context).inflate(R.layout.repo_item, parent, false)
+    )
+}
