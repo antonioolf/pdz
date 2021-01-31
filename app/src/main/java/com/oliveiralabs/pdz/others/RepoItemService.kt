@@ -1,5 +1,6 @@
 package com.oliveiralabs.pdz.others
 
+import com.google.gson.JsonObject
 import com.oliveiralabs.pdz.models.RepoItem
 import retrofit2.Response
 import retrofit2.Retrofit
@@ -14,5 +15,5 @@ class RepoItemService {
         .build()
         .create(GithubApi::class.java)
 
-    suspend fun getRepoContent(userRepo :String, branch :String): Response<List<RepoItem>> = api.getRepoContent(userRepo, branch)
+    suspend fun getRepoContent(user :String, repo :String, branch :String): Response<JsonObject> = api.getRepoContent(user, repo, branch)
 }

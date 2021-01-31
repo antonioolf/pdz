@@ -21,6 +21,17 @@ import com.oliveiralabs.pdz.adapters.RepoItemAdapter
  * Teste
  * https://medium.com/@q2ad/testing-retrofit-kotlin-coroutines-c7849e960ed8
  *
+ * Problemas com o Retrofit
+ *
+ * - Lib bastante conhecida, a principio imaginei que fosse melhor pois é mais moderna
+ *
+ * - Dificuldade em passar URLs com barra (/), ele sempre encoda e dá errado, tem que passar separado pra funcionar
+ * - Muito engessado: No meu entender, o fato de eu ter tido que especificar um model para receber os dados da API
+ *   sugere que será trabalhoso lidar com APIs onde o retorno não vem exatamente da forma mais enxuta possível.
+ *   Exemplo: No tutorial dava certo pois a API retornava uma lista e nada mais, porém a API do github retorna outros
+ *   metadados e a lista está aninhada em outros níveis, fazendo com que desse erro. Não consegui encontrar como lidar
+ *   com retornos desse tipo, que são bastante comuns.
+ *
  */
 
 class MainActivity : AppCompatActivity() {

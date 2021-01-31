@@ -4,10 +4,14 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.google.gson.JsonArray
+import com.google.gson.JsonObject
+import com.google.gson.JsonParser
 import com.oliveiralabs.pdz.models.RepoItem
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import org.json.JSONObject
 import retrofit2.HttpException
 
 class MainViewModel : ViewModel() {
@@ -17,13 +21,17 @@ class MainViewModel : ViewModel() {
     val items: LiveData<List<RepoItem>>
         get() = _items
 
-    fun fetchRepoItems(userRepo :String, branch :String) {
+    fun fetchRepoItems(user :String, repo :String, branch :String) {
         viewModelScope.launch(Dispatchers.IO) {
-            val res = service.getRepoContent(userRepo, branch)
+            val res = service.getRepoContent(user, repo, branch)
 
             if (res.isSuccessful) {
                 withContext(Dispatchers.Main) {
-                    _items.value = res.body()
+                    val jsonArray = res.body()?.get("tree") as JsonArray
+
+                    _items.value = jsonArray.map {
+                        RepoItem(it.asJsonObject.get("path").asString, true)
+                    }
                 }
             } else {
                 throw HttpException(res)
