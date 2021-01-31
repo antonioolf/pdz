@@ -3,14 +3,14 @@ package com.oliveiralabs.pdz.adapters
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.oliveiralabs.pdz.R
 import com.oliveiralabs.pdz.models.RepoItem
-import kotlinx.android.synthetic.main.repo_item.view.*
 
 class RepoItemAdapter(private val items: ArrayList<RepoItem>) : RecyclerView.Adapter<RepoItemAdapter.ViewHolder>() {
     class ViewHolder(view: View): RecyclerView.ViewHolder(view) {
-        private val name = view.name
+        private val name :TextView = view.findViewById(R.id.name)
 
         fun bind(repoItem: RepoItem) {
             name.text = repoItem.name
