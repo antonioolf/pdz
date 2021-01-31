@@ -6,7 +6,7 @@
     tools:context=".others.MainActivity">
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rvItemRit"
+        android:id="@+id/rvRepoItem"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
