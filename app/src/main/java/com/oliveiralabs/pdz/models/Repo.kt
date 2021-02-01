@@ -6,7 +6,7 @@ import androidx.room.PrimaryKey
 
 @Entity
 data class Repo(
-    @PrimaryKey val id: Int,
+    @PrimaryKey val id: Int?,
     @ColumnInfo(name = "name") val name: String?,
     @ColumnInfo(name = "url") val url: String?
 )

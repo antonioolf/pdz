@@ -76,14 +76,17 @@ class MainActivity : AppCompatActivity(), NewRepoDialog.NewRepoDialogListener {
     }
 
     override fun onDialogPositiveClick(repoName :String, repoURL :String) {
-        val db = Room.databaseBuilder(
-            applicationContext,
-            AppDatabase::class.java, resources.getString(R.string.database_name)
-        ).build()
-
         CoroutineScope(Dispatchers.IO).launch {
             val operation = async {
-                db.repoDao().insert(Repo(1, "teste", "fasdafsf"))
+
+                val db = Room.databaseBuilder(
+                    applicationContext,
+                    AppDatabase::class.java,
+                    resources.getString(R.string.database_name)
+                ).build()
+
+                val repo = Repo(null, repoName, repoURL)
+                db.repoDao().insert(repo)
             }
 
             val result = operation.await()
