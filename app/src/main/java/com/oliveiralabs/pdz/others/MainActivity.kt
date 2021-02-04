@@ -1,6 +1,12 @@
 package com.oliveiralabs.pdz.others
 
+import android.app.AlertDialog
 import android.os.Bundle
+import android.view.View
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
+import android.widget.ProgressBar
+import android.widget.Spinner
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -16,9 +22,14 @@ import com.oliveiralabs.pdz.models.Repo
 import com.oliveiralabs.pdz.models.RepoItem
 import kotlinx.coroutines.*
 import org.json.JSONObject
+import java.lang.Exception
 
 
 class MainActivity : AppCompatActivity(), NewRepoDialog.NewRepoDialogListener {
+
+    private lateinit var repoList: List<Repo>
+    private lateinit var repoItemAdapter: RepoItemAdapter
+    private lateinit var spinnerRepoAdapter: ArrayAdapter<String?>
 
     val typeFile = 100644
     private val baseUrl = "https://api.github.com"
@@ -27,31 +38,40 @@ class MainActivity : AppCompatActivity(), NewRepoDialog.NewRepoDialogListener {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val adapter = RepoItemAdapter(arrayListOf())
+        setFabAddRepo()
+        setSpinnerRepo()
+        setRepoItemList()
+    }
 
+    private fun setRepoItemList() {
+        repoItemAdapter = RepoItemAdapter(arrayListOf())
         val layoutManager = LinearLayoutManager(this)
-
         val rvRepoItem = findViewById<RecyclerView>(R.id.rvRepoItem)
-        rvRepoItem.adapter = adapter
+        rvRepoItem.adapter = repoItemAdapter
         rvRepoItem.layoutManager = layoutManager
+        loadRepoItems("antonioolf/cdi")
+    }
 
-        val queue = Volley.newRequestQueue(this)
+    private fun setSpinnerRepo() {
+        val spinner: Spinner = findViewById(R.id.spinnerRepo)
+        getRepoList()
 
-        val stringRequest = StringRequest(Request.Method.GET, "${baseUrl}/repos/antonioolf/cdi/git/trees/master?recursive=1",
-                { response ->
-                    val repoItemList = responseToRepoItemList(response)
-                    adapter.update(repoItemList)
-                    adapter.notifyDataSetChanged()
-                },
-                {
-                    print("erro")
-                }
-        )
+        repoList = arrayListOf()
+        spinnerRepoAdapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, repoList.map { it.name })
+        spinner.adapter = spinnerRepoAdapter
+        spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                val item :Repo = repoList[position]
+                item.url?.let { getUserRepoSlug(it) }?.let { loadRepoItems(it) }
+            }
 
-        queue.add(stringRequest)
+            override fun onNothingSelected(parent: AdapterView<*>?) {
+                TODO("Not yet implemented")
+            }
+        }
+    }
 
-
-        /* ------------------------------------- */
+    private fun setFabAddRepo() {
         val fabAddRepo = findViewById<FloatingActionButton>(R.id.fabAddRepo)
         fabAddRepo.setOnClickListener {
             val newRepoDialog = NewRepoDialog()
@@ -59,7 +79,61 @@ class MainActivity : AppCompatActivity(), NewRepoDialog.NewRepoDialogListener {
         }
     }
 
-    private fun responseToRepoItemList(response :String): ArrayList<RepoItem> {
+    private fun getRepoList() {
+        CoroutineScope(Dispatchers.IO).launch {
+            val operation = async {
+
+                val db = Room.databaseBuilder(
+                        applicationContext,
+                        AppDatabase::class.java,
+                        resources.getString(R.string.database_name)
+                ).build()
+
+                repoList = db.repoDao().getAll()
+                spinnerRepoAdapter.clear()
+                spinnerRepoAdapter.addAll(repoList.map { it.name })
+            }
+
+            operation.await()
+            withContext(Dispatchers.Main) {
+                spinnerRepoAdapter.notifyDataSetChanged()
+                print(">>>>>>>>>>>>>>>>>.. Atualizou!!")
+            }
+        }
+    }
+
+    private fun getUserRepoSlug(githubUrl :String): String? {
+        val strArray = githubUrl.split("/")
+        if (strArray.size != 5) {
+            return null
+        }
+
+        val username = strArray[strArray.lastIndex]
+        val repo = strArray[strArray.lastIndex -1]
+
+        return "$username/$repo"
+    }
+
+    private fun loadRepoItems(userRepoSlug :String) {
+        findViewById<ProgressBar>(R.id.pbRepoItem).visibility = View.VISIBLE
+        val queue = Volley.newRequestQueue(this)
+        val stringRequest = StringRequest(Request.Method.GET, "${baseUrl}/repos/${userRepoSlug}/git/trees/master?recursive=1",
+                { response ->
+                    val repoItemList = responseToRepoItemList(response)
+                    repoItemAdapter.update(repoItemList)
+                    repoItemAdapter.notifyDataSetChanged()
+
+                    findViewById<ProgressBar>(R.id.pbRepoItem).visibility = View.GONE
+                },
+                {
+                    print("erro")
+                }
+        )
+
+        queue.add(stringRequest)
+    }
+
+    private fun responseToRepoItemList(response: String): ArrayList<RepoItem> {
         val jsonObj = JSONObject(response)
         val jsonArray = jsonObj.getJSONArray("tree")
         val result :ArrayList<RepoItem> = arrayListOf()
@@ -75,23 +149,24 @@ class MainActivity : AppCompatActivity(), NewRepoDialog.NewRepoDialogListener {
         return result
     }
 
-    override fun onDialogPositiveClick(repoName :String, repoURL :String) {
+    override fun onDialogPositiveClick(dialog: AlertDialog, repoName: String, repoURL: String) {
         CoroutineScope(Dispatchers.IO).launch {
             val operation = async {
 
                 val db = Room.databaseBuilder(
-                    applicationContext,
-                    AppDatabase::class.java,
-                    resources.getString(R.string.database_name)
+                        applicationContext,
+                        AppDatabase::class.java,
+                        resources.getString(R.string.database_name)
                 ).build()
 
                 val repo = Repo(null, repoName, repoURL)
                 db.repoDao().insert(repo)
             }
 
-            val result = operation.await()
+            /*val result = */operation.await()
             withContext(Dispatchers.Main) {
-                println("Operações da main thread!")
+                dialog.dismiss()
+                getRepoList()
             }
         }
     }
