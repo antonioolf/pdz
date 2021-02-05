@@ -5,7 +5,7 @@
     android:layout_height="wrap_content">
 
     <EditText
-        android:id="@+id/etRepoName"
+        android:id="@+id/etUsername"
         android:inputType="text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -13,11 +13,11 @@
         android:layout_marginLeft="4dp"
         android:layout_marginRight="4dp"
         android:layout_marginBottom="4dp"
-        android:hint="@string/repo_name"
+        android:hint="@string/repo_username"
         android:autofillHints="Repo name" />
 
     <EditText
-        android:id="@+id/etRepoURL"
+        android:id="@+id/etRepository"
         android:inputType="textUri"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -25,7 +25,7 @@
         android:layout_marginLeft="4dp"
         android:layout_marginRight="4dp"
         android:layout_marginBottom="4dp"
-        android:hint="@string/repo_name"
+        android:hint="@string/repo_repository"
         android:autofillHints="Repo name" />
 
 </LinearLayout>

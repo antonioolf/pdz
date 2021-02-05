@@ -1,9 +1,10 @@
 <resources>
     <string name="app_name">PDZ</string>
     <string name="add">Add</string>
-    <string name="repo_name">Repo name</string>
     <string name="cancel">Cancel</string>
     <string name="ok">OK</string>
     <string name="database_name">rit-portal-database</string>
+    <string name="repo_username">Username</string>
+    <string name="repo_repository">Repository</string>
 
 </resources>

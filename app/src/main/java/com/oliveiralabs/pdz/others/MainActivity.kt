@@ -53,12 +53,13 @@ class MainActivity : AppCompatActivity(), NewRepoDialog.NewRepoDialogListener {
         getRepoList()
 
         repoList = arrayListOf()
-        spinnerRepoAdapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, repoList.map { it.name })
+        spinnerRepoAdapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, repoList.map { "${it.username} / ${it.repository}" })
         spinner.adapter = spinnerRepoAdapter
         spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
                 val item :Repo = repoList[position]
-                item.url?.let { getUserRepoSlug(it) }?.let { loadRepoItems(it) }
+
+                loadRepoItems("${item.username}/${item.repository}")
             }
 
             override fun onNothingSelected(parent: AdapterView<*>?) {
@@ -86,28 +87,15 @@ class MainActivity : AppCompatActivity(), NewRepoDialog.NewRepoDialogListener {
                 ).build()
 
                 repoList = db.repoDao().getAll()
-                spinnerRepoAdapter.clear()
-                spinnerRepoAdapter.addAll(repoList.map { it.name })
             }
 
             operation.await()
             withContext(Dispatchers.Main) {
+                spinnerRepoAdapter.clear()
+                spinnerRepoAdapter.addAll(repoList.map { "${it.username} / ${it.repository}" })
                 spinnerRepoAdapter.notifyDataSetChanged()
-                print(">>>>>>>>>>>>>>>>>.. Atualizou!!")
             }
         }
-    }
-
-    private fun getUserRepoSlug(githubUrl :String): String? {
-        val strArray = githubUrl.split("/")
-        if (strArray.size != 5) {
-            return null
-        }
-
-        val username = strArray[strArray.lastIndex]
-        val repo = strArray[strArray.lastIndex -1]
-
-        return "$username/$repo"
     }
 
     private fun loadRepoItems(userRepoSlug :String) {
@@ -146,7 +134,7 @@ class MainActivity : AppCompatActivity(), NewRepoDialog.NewRepoDialogListener {
         return result
     }
 
-    override fun onDialogPositiveClick(dialog: AlertDialog, repoName: String, repoURL: String) {
+    override fun onDialogPositiveClick(dialog: AlertDialog, username: String, repository: String) {
         CoroutineScope(Dispatchers.IO).launch {
             val operation = async {
 
@@ -156,7 +144,7 @@ class MainActivity : AppCompatActivity(), NewRepoDialog.NewRepoDialogListener {
                         resources.getString(R.string.database_name)
                 ).build()
 
-                val repo = Repo(null, repoName, repoURL)
+                val repo = Repo(null, username, repository)
                 db.repoDao().insert(repo)
             }
 
