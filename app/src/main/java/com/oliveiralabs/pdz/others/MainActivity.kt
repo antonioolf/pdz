@@ -3,10 +3,7 @@ package com.oliveiralabs.pdz.others
 import android.app.AlertDialog
 import android.os.Bundle
 import android.view.View
-import android.widget.AdapterView
-import android.widget.ArrayAdapter
-import android.widget.ProgressBar
-import android.widget.Spinner
+import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -22,7 +19,6 @@ import com.oliveiralabs.pdz.models.Repo
 import com.oliveiralabs.pdz.models.RepoItem
 import kotlinx.coroutines.*
 import org.json.JSONObject
-import java.lang.Exception
 
 
 class MainActivity : AppCompatActivity(), NewRepoDialog.NewRepoDialogListener {
@@ -126,7 +122,8 @@ class MainActivity : AppCompatActivity(), NewRepoDialog.NewRepoDialogListener {
                     findViewById<ProgressBar>(R.id.pbRepoItem).visibility = View.GONE
                 },
                 {
-                    print("erro")
+                    Toast.makeText(this, "Erro ao carregar itens do repositório", Toast.LENGTH_SHORT).show()
+                    findViewById<ProgressBar>(R.id.pbRepoItem).visibility = View.GONE
                 }
         )
 
