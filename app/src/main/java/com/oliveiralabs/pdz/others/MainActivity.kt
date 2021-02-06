@@ -23,7 +23,7 @@ import org.json.JSONObject
 
 class MainActivity : AppCompatActivity(), NewRepoDialog.NewRepoDialogListener {
 
-    private lateinit var repoList: List<Repo>
+    private lateinit var repos: List<Repo>
     private lateinit var repoItemAdapter: RepoItemAdapter
     private lateinit var spinnerRepoAdapter: ArrayAdapter<String?>
 
@@ -36,10 +36,10 @@ class MainActivity : AppCompatActivity(), NewRepoDialog.NewRepoDialogListener {
 
         setFabAddRepo()
         setSpinnerRepo()
-        setRepoItemList()
+        setRepoItems()
     }
 
-    private fun setRepoItemList() {
+    private fun setRepoItems() {
         repoItemAdapter = RepoItemAdapter(arrayListOf())
         val layoutManager = LinearLayoutManager(this)
         val rvRepoItem = findViewById<RecyclerView>(R.id.rvRepoItem)
@@ -50,14 +50,14 @@ class MainActivity : AppCompatActivity(), NewRepoDialog.NewRepoDialogListener {
 
     private fun setSpinnerRepo() {
         val spinner: Spinner = findViewById(R.id.spinnerRepo)
-        getRepoList()
+        getRepos()
 
-        repoList = arrayListOf()
-        spinnerRepoAdapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, repoList.map { "${it.username} / ${it.repository}" })
+        repos = arrayListOf()
+        spinnerRepoAdapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, repos.map { "${it.username} / ${it.repository}" })
         spinner.adapter = spinnerRepoAdapter
         spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-                val item :Repo = repoList[position]
+                val item :Repo = repos[position]
 
                 loadRepoItems("${item.username}/${item.repository}")
             }
@@ -76,7 +76,7 @@ class MainActivity : AppCompatActivity(), NewRepoDialog.NewRepoDialogListener {
         }
     }
 
-    private fun getRepoList() {
+    private fun getRepos() {
         CoroutineScope(Dispatchers.IO).launch {
             val operation = async {
 
@@ -86,13 +86,13 @@ class MainActivity : AppCompatActivity(), NewRepoDialog.NewRepoDialogListener {
                         resources.getString(R.string.database_name)
                 ).build()
 
-                repoList = db.repoDao().getAll()
+                repos = db.repoDao().getAll()
             }
 
             operation.await()
             withContext(Dispatchers.Main) {
                 spinnerRepoAdapter.clear()
-                spinnerRepoAdapter.addAll(repoList.map { "${it.username} / ${it.repository}" })
+                spinnerRepoAdapter.addAll(repos.map { "${it.username} / ${it.repository}" })
                 spinnerRepoAdapter.notifyDataSetChanged()
             }
         }
@@ -103,8 +103,8 @@ class MainActivity : AppCompatActivity(), NewRepoDialog.NewRepoDialogListener {
         val queue = Volley.newRequestQueue(this)
         val stringRequest = StringRequest(Request.Method.GET, "${baseUrl}/repos/${userRepoSlug}/git/trees/master?recursive=1",
                 { response ->
-                    val repoItemList = responseToRepoItemList(response)
-                    repoItemAdapter.update(repoItemList)
+                    val repoItems = responseToRepoItems(response)
+                    repoItemAdapter.update(repoItems)
                     repoItemAdapter.notifyDataSetChanged()
 
                     findViewById<ProgressBar>(R.id.pbRepoItem).visibility = View.GONE
@@ -118,7 +118,7 @@ class MainActivity : AppCompatActivity(), NewRepoDialog.NewRepoDialogListener {
         queue.add(stringRequest)
     }
 
-    private fun responseToRepoItemList(response: String): ArrayList<RepoItem> {
+    private fun responseToRepoItems(response: String): ArrayList<RepoItem> {
         val jsonObj = JSONObject(response)
         val jsonArray = jsonObj.getJSONArray("tree")
         val result :ArrayList<RepoItem> = arrayListOf()
@@ -151,7 +151,7 @@ class MainActivity : AppCompatActivity(), NewRepoDialog.NewRepoDialogListener {
             /*val result = */operation.await()
             withContext(Dispatchers.Main) {
                 dialog.dismiss()
-                getRepoList()
+                getRepos()
             }
         }
     }
