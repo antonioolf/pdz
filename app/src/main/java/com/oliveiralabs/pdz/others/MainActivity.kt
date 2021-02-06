@@ -26,46 +26,21 @@ class MainActivity : AppCompatActivity(), NewRepoDialog.NewRepoDialogListener {
     private lateinit var repos: List<Repo>
     private lateinit var repoItemAdapter: RepoItemAdapter
     private lateinit var spinnerRepoAdapter: ArrayAdapter<String?>
+    private lateinit var pbRepoItem: ProgressBar
 
-    val typeFile = 100644
+    /*val typeFile = 100644*/
     private val baseUrl = "https://api.github.com"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        pbRepoItem = findViewById(R.id.pbRepoItem)
+
         setFabAddRepo()
-        setSpinnerRepo()
+        setSpinnerRepos()
+        setRepos()
         setRepoItems()
-    }
-
-    private fun setRepoItems() {
-        repoItemAdapter = RepoItemAdapter(arrayListOf())
-        val layoutManager = LinearLayoutManager(this)
-        val rvRepoItem = findViewById<RecyclerView>(R.id.rvRepoItem)
-        rvRepoItem.adapter = repoItemAdapter
-        rvRepoItem.layoutManager = layoutManager
-        loadRepoItems("antonioolf/cdi")
-    }
-
-    private fun setSpinnerRepo() {
-        val spinner: Spinner = findViewById(R.id.spinnerRepo)
-        getRepos()
-
-        repos = arrayListOf()
-        spinnerRepoAdapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, repos.map { "${it.username} / ${it.repository}" })
-        spinner.adapter = spinnerRepoAdapter
-        spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-                val item :Repo = repos[position]
-
-                loadRepoItems("${item.username}/${item.repository}")
-            }
-
-            override fun onNothingSelected(parent: AdapterView<*>?) {
-                TODO("Not yet implemented")
-            }
-        }
     }
 
     private fun setFabAddRepo() {
@@ -76,7 +51,32 @@ class MainActivity : AppCompatActivity(), NewRepoDialog.NewRepoDialogListener {
         }
     }
 
-    private fun getRepos() {
+    private fun setSpinnerRepos() {
+        val spinner: Spinner = findViewById(R.id.spinnerRepo)
+
+        spinnerRepoAdapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, arrayListOf())
+        spinner.adapter = spinnerRepoAdapter
+        spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                val item :Repo = repos[position]
+                loadRepoItems("${item.username}/${item.repository}")
+            }
+
+            override fun onNothingSelected(parent: AdapterView<*>?) {
+                TODO("Not yet implemented")
+            }
+        }
+    }
+
+    private fun setRepoItems() {
+        repoItemAdapter = RepoItemAdapter(arrayListOf())
+        val layoutManager = LinearLayoutManager(this)
+        val rvRepoItem = findViewById<RecyclerView>(R.id.rvRepoItem)
+        rvRepoItem.adapter = repoItemAdapter
+        rvRepoItem.layoutManager = layoutManager
+    }
+
+    private fun setRepos() {
         CoroutineScope(Dispatchers.IO).launch {
             val operation = async {
 
@@ -91,15 +91,25 @@ class MainActivity : AppCompatActivity(), NewRepoDialog.NewRepoDialogListener {
 
             operation.await()
             withContext(Dispatchers.Main) {
-                spinnerRepoAdapter.clear()
-                spinnerRepoAdapter.addAll(repos.map { "${it.username} / ${it.repository}" })
-                spinnerRepoAdapter.notifyDataSetChanged()
+                pbRepoItem.visibility = View.GONE
+                if (repos.isEmpty()) {
+
+                    findViewById<LinearLayout>(R.id.llEmptyRepoList).visibility = View.VISIBLE
+                    findViewById<Spinner>(R.id.spinnerRepo).visibility = View.GONE
+                } else {
+                    spinnerRepoAdapter.clear()
+                    spinnerRepoAdapter.addAll(repos.map { "${it.username} / ${it.repository}" })
+                    spinnerRepoAdapter.notifyDataSetChanged()
+
+                    findViewById<LinearLayout>(R.id.llEmptyRepoList).visibility = View.GONE
+                    findViewById<Spinner>(R.id.spinnerRepo).visibility = View.VISIBLE
+                }
             }
         }
     }
 
     private fun loadRepoItems(userRepoSlug :String) {
-        findViewById<ProgressBar>(R.id.pbRepoItem).visibility = View.VISIBLE
+        pbRepoItem.visibility = View.VISIBLE
         val queue = Volley.newRequestQueue(this)
         val stringRequest = StringRequest(Request.Method.GET, "${baseUrl}/repos/${userRepoSlug}/git/trees/master?recursive=1",
                 { response ->
@@ -107,11 +117,11 @@ class MainActivity : AppCompatActivity(), NewRepoDialog.NewRepoDialogListener {
                     repoItemAdapter.update(repoItems)
                     repoItemAdapter.notifyDataSetChanged()
 
-                    findViewById<ProgressBar>(R.id.pbRepoItem).visibility = View.GONE
+                    pbRepoItem.visibility = View.GONE
                 },
                 {
                     Toast.makeText(this, "Erro ao carregar itens do repositório", Toast.LENGTH_SHORT).show()
-                    findViewById<ProgressBar>(R.id.pbRepoItem).visibility = View.GONE
+                    pbRepoItem.visibility = View.GONE
                 }
         )
 
@@ -151,7 +161,7 @@ class MainActivity : AppCompatActivity(), NewRepoDialog.NewRepoDialogListener {
             /*val result = */operation.await()
             withContext(Dispatchers.Main) {
                 dialog.dismiss()
-                getRepos()
+                setRepos()
             }
         }
     }

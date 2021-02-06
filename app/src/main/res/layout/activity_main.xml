@@ -12,6 +12,19 @@
     />
 
     <LinearLayout
+        android:id="@+id/llEmptyRepoList"
+        android:gravity="center"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <TextView
+            android:text="@string/add_one_or_more_repos"
+            android:gravity="center"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </LinearLayout>
+
+
+    <LinearLayout
         android:layout_below="@id/spinnerRepo"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

@@ -6,5 +6,6 @@
     <string name="database_name">rit-portal-database</string>
     <string name="repo_username">Username</string>
     <string name="repo_repository">Repository</string>
+    <string name="add_one_or_more_repos">Adicione um ou mais repositórios</string>
 
 </resources>
