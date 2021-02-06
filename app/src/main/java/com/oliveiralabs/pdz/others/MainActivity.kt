@@ -28,6 +28,9 @@ class MainActivity : AppCompatActivity(), NewRepoDialog.NewRepoDialogListener {
     private lateinit var spinnerRepoAdapter: ArrayAdapter<String?>
     private lateinit var pbRepoItem: ProgressBar
 
+    // "aws", "aws add terraform-eks"
+    private lateinit var formulasTree: Map<String, String>
+
     /*val typeFile = 100644*/
     private val baseUrl = "https://api.github.com"
 
@@ -68,14 +71,6 @@ class MainActivity : AppCompatActivity(), NewRepoDialog.NewRepoDialogListener {
         }
     }
 
-    private fun setRepoItems() {
-        repoItemAdapter = RepoItemAdapter(arrayListOf())
-        val layoutManager = LinearLayoutManager(this)
-        val rvRepoItem = findViewById<RecyclerView>(R.id.rvRepoItem)
-        rvRepoItem.adapter = repoItemAdapter
-        rvRepoItem.layoutManager = layoutManager
-    }
-
     private fun setRepos() {
         CoroutineScope(Dispatchers.IO).launch {
             val operation = async {
@@ -106,6 +101,14 @@ class MainActivity : AppCompatActivity(), NewRepoDialog.NewRepoDialogListener {
                 }
             }
         }
+    }
+
+    private fun setRepoItems() {
+        repoItemAdapter = RepoItemAdapter(arrayListOf())
+        val layoutManager = LinearLayoutManager(this)
+        val rvRepoItem = findViewById<RecyclerView>(R.id.rvRepoItem)
+        rvRepoItem.adapter = repoItemAdapter
+        rvRepoItem.layoutManager = layoutManager
     }
 
     private fun loadRepoItems(userRepoSlug :String) {
