@@ -6,20 +6,19 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.oliveiralabs.pdz.R
-import com.oliveiralabs.pdz.models.RepoItem
 
-class RepoItemAdapter(private val items: ArrayList<RepoItem>) : RecyclerView.Adapter<RepoItemAdapter.ViewHolder>() {
+class GroupAdapter(private val items: ArrayList<String>) : RecyclerView.Adapter<GroupAdapter.ViewHolder>() {
     class ViewHolder(view: View): RecyclerView.ViewHolder(view) {
         private val name :TextView = view.findViewById(R.id.name)
 
-        fun bind(repoItem: RepoItem) {
-            name.text = repoItem.name
+        fun bind(group: String) {
+            name.text = group
         }
     }
 
-    fun update(repoItems: List<RepoItem>) {
+    fun update(groups: List<String>) {
         items.clear()
-        items.addAll(repoItems)
+        items.addAll(groups)
         notifyDataSetChanged()
     }
 
@@ -30,6 +29,6 @@ class RepoItemAdapter(private val items: ArrayList<RepoItem>) : RecyclerView.Ada
     override fun getItemCount(): Int = items.size
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = ViewHolder(
-        LayoutInflater.from(parent.context).inflate(R.layout.repo_item, parent, false)
+        LayoutInflater.from(parent.context).inflate(R.layout.group_item, parent, false)
     )
 }

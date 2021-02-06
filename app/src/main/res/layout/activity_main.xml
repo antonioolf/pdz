@@ -32,13 +32,13 @@
         android:orientation="vertical">
 
         <ProgressBar
-            android:id="@+id/pbRepoItem"
+            android:id="@+id/pbGroup"
             android:layout_gravity="center"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rvRepoItem"
+            android:id="@+id/rvGroup"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
 

@@ -13,37 +13,32 @@ import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.oliveiralabs.pdz.R
-import com.oliveiralabs.pdz.adapters.RepoItemAdapter
+import com.oliveiralabs.pdz.adapters.GroupAdapter
 import com.oliveiralabs.pdz.database.AppDatabase
+import com.oliveiralabs.pdz.models.Formula
 import com.oliveiralabs.pdz.models.Repo
-import com.oliveiralabs.pdz.models.RepoItem
 import kotlinx.coroutines.*
-import org.json.JSONObject
 
 
 class MainActivity : AppCompatActivity(), NewRepoDialog.NewRepoDialogListener {
 
     private lateinit var repos: List<Repo>
-    private lateinit var repoItemAdapter: RepoItemAdapter
+    private lateinit var groupAdapter: GroupAdapter
     private lateinit var spinnerRepoAdapter: ArrayAdapter<String?>
-    private lateinit var pbRepoItem: ProgressBar
+    private lateinit var pbGroup: ProgressBar
 
-    // "aws", "aws add terraform-eks"
-    private lateinit var formulasTree: Map<String, String>
-
-    /*val typeFile = 100644*/
     private val baseUrl = "https://api.github.com"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        pbRepoItem = findViewById(R.id.pbRepoItem)
+        pbGroup = findViewById(R.id.pbGroup)
 
         setFabAddRepo()
         setSpinnerRepos()
         setRepos()
-        setRepoItems()
+        setGroups()
     }
 
     private fun setFabAddRepo() {
@@ -86,7 +81,7 @@ class MainActivity : AppCompatActivity(), NewRepoDialog.NewRepoDialogListener {
 
             operation.await()
             withContext(Dispatchers.Main) {
-                pbRepoItem.visibility = View.GONE
+                pbGroup.visibility = View.GONE
                 if (repos.isEmpty()) {
 
                     findViewById<LinearLayout>(R.id.llEmptyRepoList).visibility = View.VISIBLE
@@ -103,48 +98,34 @@ class MainActivity : AppCompatActivity(), NewRepoDialog.NewRepoDialogListener {
         }
     }
 
-    private fun setRepoItems() {
-        repoItemAdapter = RepoItemAdapter(arrayListOf())
+    private fun setGroups() {
+        groupAdapter = GroupAdapter(arrayListOf())
         val layoutManager = LinearLayoutManager(this)
-        val rvRepoItem = findViewById<RecyclerView>(R.id.rvRepoItem)
-        rvRepoItem.adapter = repoItemAdapter
-        rvRepoItem.layoutManager = layoutManager
+        val rvGroup = findViewById<RecyclerView>(R.id.rvGroup)
+        rvGroup.adapter = groupAdapter
+        rvGroup.layoutManager = layoutManager
     }
 
     private fun loadRepoItems(userRepoSlug :String) {
-        pbRepoItem.visibility = View.VISIBLE
+        pbGroup.visibility = View.VISIBLE
         val queue = Volley.newRequestQueue(this)
         val stringRequest = StringRequest(Request.Method.GET, "${baseUrl}/repos/${userRepoSlug}/git/trees/master?recursive=1",
                 { response ->
-                    val repoItems = responseToRepoItems(response)
-                    repoItemAdapter.update(repoItems)
-                    repoItemAdapter.notifyDataSetChanged()
+                    val repoMapper = RepoMapper()
+                    val repoMap :MutableMap<String, List<Formula>> = repoMapper.getRepoItemsMap(response)
 
-                    pbRepoItem.visibility = View.GONE
+                    groupAdapter.update(repoMap.keys.map { it })
+                    groupAdapter.notifyDataSetChanged()
+
+                    pbGroup.visibility = View.GONE
                 },
                 {
                     Toast.makeText(this, "Erro ao carregar itens do repositório", Toast.LENGTH_SHORT).show()
-                    pbRepoItem.visibility = View.GONE
+                    pbGroup.visibility = View.GONE
                 }
         )
 
         queue.add(stringRequest)
-    }
-
-    private fun responseToRepoItems(response: String): ArrayList<RepoItem> {
-        val jsonObj = JSONObject(response)
-        val jsonArray = jsonObj.getJSONArray("tree")
-        val result :ArrayList<RepoItem> = arrayListOf()
-
-        for (i in 0 until jsonArray.length()) {
-            val file :JSONObject = jsonArray.get(i) as JSONObject
-            val fileName :String = file.get("path") as String
-            val mode :String = file.get("mode") as String
-
-            result.add(RepoItem(fileName, true))
-        }
-
-        return result
     }
 
     override fun onDialogPositiveClick(dialog: AlertDialog, username: String, repository: String) {
