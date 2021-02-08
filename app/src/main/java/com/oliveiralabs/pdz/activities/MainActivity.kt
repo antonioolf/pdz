@@ -12,6 +12,7 @@ import com.android.volley.Request
 import com.android.volley.toolbox.StringRequest
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.oliveiralabs.pdz.R
+import com.oliveiralabs.pdz.adapters.FormulasAdapter
 import com.oliveiralabs.pdz.adapters.GroupAdapter
 import com.oliveiralabs.pdz.database.AppDatabase
 import com.oliveiralabs.pdz.models.Formula
@@ -21,11 +22,14 @@ import com.oliveiralabs.pdz.others.RepoMapper
 import com.oliveiralabs.pdz.others.RequestQueueSingleton
 import kotlinx.coroutines.*
 
-
 class MainActivity : AppCompatActivity(), NewRepoDialog.NewRepoDialogListener {
 
+    private var layoutManager: LinearLayoutManager = LinearLayoutManager(this)
     private lateinit var repos: List<Repo>
+
+    private lateinit var formulasAdapter: FormulasAdapter
     private lateinit var groupAdapter: GroupAdapter
+
     private lateinit var spinnerRepoAdapter: ArrayAdapter<String?>
     private lateinit var pbGroup: ProgressBar
 

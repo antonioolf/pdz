@@ -1,24 +1,29 @@
 package com.oliveiralabs.pdz.adapters
 
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.oliveiralabs.pdz.R
+import com.oliveiralabs.pdz.activities.FormulaActivity
 import com.oliveiralabs.pdz.models.Formula
 
-class FormulaAdapter(private val items: ArrayList<Formula>) : RecyclerView.Adapter<FormulaAdapter.ViewHolder>() {
+class FormulasAdapter(private val items: ArrayList<Formula>) : RecyclerView.Adapter<FormulasAdapter.ViewHolder>() {
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         var command :TextView = view.findViewById(R.id.tvGroupName)
-        var readme :TextView = view.findViewById(R.id.tvGroupName)
-        var shortDescription :TextView = view.findViewById(R.id.tvGroupName)
 
         init {
             view.setOnClickListener {
-                print("hi")
-                /*view.context.startActivity(Intent(view.context, FormulasActivity::class.java)
-                .putExtra("group", name.text))*/
+                Toast.makeText(view.context, "Hello!", Toast.LENGTH_SHORT).show()
+
+                val intent = Intent(command.context, FormulaActivity::class.java).apply {
+                    putExtra("command", command.text.toString())
+                }
+
+                command.context.startActivity(intent)
             }
         }
     }

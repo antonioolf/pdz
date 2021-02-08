@@ -13,7 +13,7 @@ import androidx.fragment.app.DialogFragment
 import com.oliveiralabs.pdz.R
 
 
-class NewRepoDialog  :DialogFragment() {
+class NewRepoDialog :DialogFragment() {
 
     private lateinit var listener: NewRepoDialogListener
 

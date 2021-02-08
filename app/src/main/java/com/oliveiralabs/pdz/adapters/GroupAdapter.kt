@@ -1,13 +1,14 @@
 package com.oliveiralabs.pdz.adapters
 
-import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.fragment.app.FragmentActivity
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.oliveiralabs.pdz.R
-import com.oliveiralabs.pdz.activities.FormulasActivity
+import com.oliveiralabs.pdz.others.FormulasDialog
 
 class GroupAdapter(private val items: ArrayList<String>) : RecyclerView.Adapter<GroupAdapter.ViewHolder>() {
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
@@ -15,10 +16,9 @@ class GroupAdapter(private val items: ArrayList<String>) : RecyclerView.Adapter<
 
         init {
             view.setOnClickListener {
-
-                view.context.startActivity(Intent(view.context, FormulasActivity::class.java)
-                    .putExtra("group", tvGroupName.text)
-                )
+                tvGroupName.text
+                FormulasDialog()
+                    .show((view.context as FragmentActivity).supportFragmentManager, tvGroupName.text.toString())
             }
         }
     }
