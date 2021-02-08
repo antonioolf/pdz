@@ -1,4 +1,4 @@
-package com.oliveiralabs.pdz.others
+package com.oliveiralabs.pdz.activities
 
 import android.app.AlertDialog
 import android.os.Bundle
@@ -10,13 +10,15 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.room.Room
 import com.android.volley.Request
 import com.android.volley.toolbox.StringRequest
-import com.android.volley.toolbox.Volley
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.oliveiralabs.pdz.R
 import com.oliveiralabs.pdz.adapters.GroupAdapter
 import com.oliveiralabs.pdz.database.AppDatabase
 import com.oliveiralabs.pdz.models.Formula
 import com.oliveiralabs.pdz.models.Repo
+import com.oliveiralabs.pdz.others.NewRepoDialog
+import com.oliveiralabs.pdz.others.RepoMapper
+import com.oliveiralabs.pdz.others.RequestQueueSingleton
 import kotlinx.coroutines.*
 
 
@@ -45,7 +47,7 @@ class MainActivity : AppCompatActivity(), NewRepoDialog.NewRepoDialogListener {
         val fabAddRepo = findViewById<FloatingActionButton>(R.id.fabAddRepo)
         fabAddRepo.setOnClickListener {
             val newRepoDialog = NewRepoDialog()
-            newRepoDialog.show(supportFragmentManager, "teste")
+            newRepoDialog.show(supportFragmentManager, "teste") // TODO: set tag = null
         }
     }
 
@@ -108,11 +110,11 @@ class MainActivity : AppCompatActivity(), NewRepoDialog.NewRepoDialogListener {
 
     private fun loadRepoItems(userRepoSlug :String) {
         pbGroup.visibility = View.VISIBLE
-        val queue = Volley.newRequestQueue(this)
+        val queue = RequestQueueSingleton.getInstance(this.applicationContext).requestQueue
         val stringRequest = StringRequest(Request.Method.GET, "${baseUrl}/repos/${userRepoSlug}/git/trees/master?recursive=1",
                 { response ->
-                    val repoMapper = RepoMapper()
-                    val repoMap :MutableMap<String, List<Formula>> = repoMapper.getRepoItemsMap(response)
+                    RepoMapper.updateMapping(response)
+                    val repoMap :MutableMap<String, List<Formula>> = RepoMapper.getMapping()
 
                     groupAdapter.update(repoMap.keys.map { it })
                     groupAdapter.notifyDataSetChanged()
@@ -120,7 +122,7 @@ class MainActivity : AppCompatActivity(), NewRepoDialog.NewRepoDialogListener {
                     pbGroup.visibility = View.GONE
                 },
                 {
-                    Toast.makeText(this, "Erro ao carregar itens do repositório", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this, getString(R.string.error_load_repo_items), Toast.LENGTH_SHORT).show()
                     pbGroup.visibility = View.GONE
                 }
         )

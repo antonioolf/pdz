@@ -10,9 +10,22 @@
     android:focusable="true">
 
     <TextView
-        android:id="@+id/tvGroupName"
+        android:id="@+id/tvCommand"
         android:padding="20dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
+
+    <TextView
+        android:id="@+id/tvReadme"
+        android:padding="20dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:id="@+id/tvShortDescription"
+        android:padding="20dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
 
 </androidx.cardview.widget.CardView>

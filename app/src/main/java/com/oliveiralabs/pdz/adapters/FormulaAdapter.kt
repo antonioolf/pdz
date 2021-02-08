@@ -1,37 +1,37 @@
 package com.oliveiralabs.pdz.adapters
 
-import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.oliveiralabs.pdz.R
-import com.oliveiralabs.pdz.activities.FormulasActivity
+import com.oliveiralabs.pdz.models.Formula
 
-class GroupAdapter(private val items: ArrayList<String>) : RecyclerView.Adapter<GroupAdapter.ViewHolder>() {
+class FormulaAdapter(private val items: ArrayList<Formula>) : RecyclerView.Adapter<FormulaAdapter.ViewHolder>() {
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        val tvGroupName :TextView = view.findViewById(R.id.tvGroupName)
+        var command :TextView = view.findViewById(R.id.tvGroupName)
+        var readme :TextView = view.findViewById(R.id.tvGroupName)
+        var shortDescription :TextView = view.findViewById(R.id.tvGroupName)
 
         init {
             view.setOnClickListener {
-
-                view.context.startActivity(Intent(view.context, FormulasActivity::class.java)
-                    .putExtra("group", tvGroupName.text)
-                )
+                print("hi")
+                /*view.context.startActivity(Intent(view.context, FormulasActivity::class.java)
+                .putExtra("group", name.text))*/
             }
         }
     }
 
-    fun update(groups: List<String>) {
+    fun update(formulas: List<Formula>) {
         items.clear()
-        items.addAll(groups)
+        items.addAll(formulas)
         notifyDataSetChanged()
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = items[position]
-        holder.tvGroupName.text = item
+        holder.command.text = item.command
     }
 
     override fun getItemCount(): Int = items.size
