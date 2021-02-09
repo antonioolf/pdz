@@ -12,7 +12,7 @@ import com.oliveiralabs.pdz.models.Formula
 
 class FormulasAdapter(private val items: ArrayList<Formula>) : RecyclerView.Adapter<FormulasAdapter.ViewHolder>() {
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        var command :TextView = view.findViewById(R.id.tvGroupName)
+        var command :TextView = view.findViewById(R.id.tvItemName)
         lateinit var formula :Formula
 
         init {
@@ -44,6 +44,6 @@ class FormulasAdapter(private val items: ArrayList<Formula>) : RecyclerView.Adap
     override fun getItemCount(): Int = items.size
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = ViewHolder(
-        LayoutInflater.from(parent.context).inflate(R.layout.group_item, parent, false)
+        LayoutInflater.from(parent.context).inflate(R.layout.list_item, parent, false)
     )
 }

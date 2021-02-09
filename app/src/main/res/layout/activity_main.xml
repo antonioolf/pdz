@@ -1,15 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_height="match_parent"
     android:layout_width="match_parent">
 
-    <Spinner
-        android:id="@+id/spinnerRepo"
+    <LinearLayout
+        android:id="@+id/spinnerRepoContainer"
+        android:background="@color/gray_100"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-    />
+        android:layout_height="wrap_content">
+        <Spinner
+            android:id="@+id/spinnerRepo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="20dp"
+        />
+    </LinearLayout>
+
 
     <LinearLayout
         android:id="@+id/llEmptyRepoList"
@@ -25,17 +32,18 @@
 
 
     <LinearLayout
-        android:layout_below="@id/spinnerRepo"
+        android:layout_below="@id/spinnerRepoContainer"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:context=".activities.MainActivity"
         android:orientation="vertical">
 
         <ProgressBar
-            android:id="@+id/pbGroup"
             android:layout_gravity="center"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:id="@+id/pbGroup"
+            android:layout_marginTop="20dp"
+            android:layout_width="80dp"
+            android:layout_height="80dp" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rvGroup"

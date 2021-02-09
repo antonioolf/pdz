@@ -5,14 +5,13 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.fragment.app.FragmentActivity
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.oliveiralabs.pdz.R
 import com.oliveiralabs.pdz.others.FormulasDialog
 
 class GroupAdapter(private val items: ArrayList<String>) : RecyclerView.Adapter<GroupAdapter.ViewHolder>() {
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        val tvGroupName :TextView = view.findViewById(R.id.tvGroupName)
+        val tvGroupName :TextView = view.findViewById(R.id.tvItemName)
 
         init {
             view.setOnClickListener {
@@ -37,6 +36,6 @@ class GroupAdapter(private val items: ArrayList<String>) : RecyclerView.Adapter<
     override fun getItemCount(): Int = items.size
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = ViewHolder(
-        LayoutInflater.from(parent.context).inflate(R.layout.group_item, parent, false)
+        LayoutInflater.from(parent.context).inflate(R.layout.list_item, parent, false)
     )
 }

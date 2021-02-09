@@ -10,5 +10,6 @@
     <string name="error_load_repo_items">Erro ao carregar itens do repositório</string>
     <string name="base_url">https://api.github.com</string>
     <string name="command">command</string>
+    <string name="group_icon">Group icon</string>
 
 </resources>

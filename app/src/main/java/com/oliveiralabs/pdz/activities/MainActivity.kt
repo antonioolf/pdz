@@ -24,12 +24,8 @@ import kotlinx.coroutines.*
 
 class MainActivity : AppCompatActivity(), NewRepoDialog.NewRepoDialogListener {
 
-    private var layoutManager: LinearLayoutManager = LinearLayoutManager(this)
     private lateinit var repos: List<Repo>
-
-    private lateinit var formulasAdapter: FormulasAdapter
     private lateinit var groupAdapter: GroupAdapter
-
     private lateinit var spinnerRepoAdapter: ArrayAdapter<String?>
     private lateinit var pbGroup: ProgressBar
 
@@ -56,7 +52,7 @@ class MainActivity : AppCompatActivity(), NewRepoDialog.NewRepoDialogListener {
     private fun setSpinnerRepos() {
         val spinner: Spinner = findViewById(R.id.spinnerRepo)
 
-        spinnerRepoAdapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, arrayListOf())
+        spinnerRepoAdapter = ArrayAdapter(this, R.layout.spinner_item, arrayListOf())
         spinner.adapter = spinnerRepoAdapter
         spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {

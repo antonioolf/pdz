@@ -9,11 +9,6 @@
     tools:context=".activities.FormulaActivity"
     android:orientation="vertical">
 
-    <ProgressBar
-        android:id="@+id/pbFormula"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
-
     <LinearLayout
         android:background="#32343C"
         android:layout_marginBottom="20dp"
@@ -32,6 +27,13 @@
             android:layout_marginTop="20dp"
         />
     </LinearLayout>
+
+    <ProgressBar
+        android:layout_gravity="center"
+        android:id="@+id/pbFormula"
+        android:layout_marginTop="20dp"
+        android:layout_width="80dp"
+        android:layout_height="80dp" />
 
     <TextView
         android:id="@+id/formulaReadme"
