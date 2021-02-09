@@ -9,5 +9,6 @@
     <string name="add_one_or_more_repos">Adicione um ou mais repositórios</string>
     <string name="error_load_repo_items">Erro ao carregar itens do repositório</string>
     <string name="base_url">https://api.github.com</string>
+    <string name="command">command</string>
 
 </resources>

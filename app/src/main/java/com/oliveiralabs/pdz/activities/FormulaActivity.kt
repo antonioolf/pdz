@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.util.Base64
 import android.view.View
 import android.widget.ProgressBar
+import android.widget.TextView
 import android.widget.Toast
 import com.android.volley.Request
 import com.android.volley.toolbox.StringRequest
@@ -19,8 +20,10 @@ class FormulaActivity : AppCompatActivity() {
         setContentView(R.layout.activity_formula)
 
         val readmeURL = intent.getStringExtra("readmeURL").toString()
-/*        intent.getStringExtra("command")
-        intent.getStringExtra("helpJsonURL")*/
+        val command = intent.getStringExtra("command").toString()
+        val ritCommand = "rit ${command.split("/").joinToString(" ") }"
+        findViewById<TextView>(R.id.formulaCommand).text = ritCommand
+        /*intent.getStringExtra("helpJsonURL")*/
 
         loadMarkdown(readmeURL)
     }
