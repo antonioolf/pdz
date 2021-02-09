@@ -14,13 +14,15 @@ import com.oliveiralabs.pdz.models.Formula
 class FormulasAdapter(private val items: ArrayList<Formula>) : RecyclerView.Adapter<FormulasAdapter.ViewHolder>() {
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         var command :TextView = view.findViewById(R.id.tvGroupName)
+        lateinit var formula :Formula
 
         init {
             view.setOnClickListener {
-                Toast.makeText(view.context, "Hello!", Toast.LENGTH_SHORT).show()
 
                 val intent = Intent(command.context, FormulaActivity::class.java).apply {
-                    putExtra("command", command.text.toString())
+                    putExtra("command", formula.command)
+                    putExtra("readmeURL", formula.readmeURL)
+                    putExtra("helpJsonURL", formula.helpJsonURL)
                 }
 
                 command.context.startActivity(intent)
@@ -36,6 +38,7 @@ class FormulasAdapter(private val items: ArrayList<Formula>) : RecyclerView.Adap
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = items[position]
+        holder.formula = item
         holder.command.text = item.command
     }
 

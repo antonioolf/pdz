@@ -8,6 +8,6 @@ import androidx.room.PrimaryKey
 @Entity(tableName = "repo")
 data class Repo(
     @PrimaryKey val id: Int?,
-    @ColumnInfo(name = "username") val username: String?,
-    @ColumnInfo(name = "repository") val repository: String?
+    @ColumnInfo(name = "username") val username: String,
+    @ColumnInfo(name = "repository") val repository: String
 )

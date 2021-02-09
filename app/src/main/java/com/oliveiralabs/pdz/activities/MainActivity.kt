@@ -33,8 +33,6 @@ class MainActivity : AppCompatActivity(), NewRepoDialog.NewRepoDialogListener {
     private lateinit var spinnerRepoAdapter: ArrayAdapter<String?>
     private lateinit var pbGroup: ProgressBar
 
-    private val baseUrl = "https://api.github.com"
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -115,7 +113,7 @@ class MainActivity : AppCompatActivity(), NewRepoDialog.NewRepoDialogListener {
     private fun loadRepoItems(userRepoSlug :String) {
         pbGroup.visibility = View.VISIBLE
         val queue = RequestQueueSingleton.getInstance(this.applicationContext).requestQueue
-        val stringRequest = StringRequest(Request.Method.GET, "${baseUrl}/repos/${userRepoSlug}/git/trees/master?recursive=1",
+        val stringRequest = StringRequest(Request.Method.GET, "${getString(R.string.base_url)}/repos/${userRepoSlug}/git/trees/master?recursive=1",
                 { response ->
                     RepoMapper.updateMapping(response)
                     val repoMap :MutableMap<String, List<Formula>> = RepoMapper.getMapping()

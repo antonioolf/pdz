@@ -1,6 +1,7 @@
 package com.oliveiralabs.pdz.others
 
 import com.oliveiralabs.pdz.models.Formula
+import org.json.JSONArray
 import org.json.JSONObject
 
 class RepoMapper {
@@ -46,13 +47,32 @@ class RepoMapper {
                 val groupFormulas :List<Formula> = formulas
                         .filter { it.startsWith("${g}/") }
                         .map {
-                            Formula(it, null, null)
+
+                            val helpJsonURL = getURLByFileName(it, jsonArray, "help.json")
+                            val readmeURL = getURLByFileName(it, jsonArray, "README.md")
+                            Formula(it, readmeURL, helpJsonURL)
                         }
 
                 result[g] = groupFormulas
             }
 
             mapping = result
+        }
+
+        private fun getURLByFileName(command :String, jsonArray: JSONArray, fileName: String): String {
+            var result :String = ""
+
+            for (i in 0 until jsonArray.length()) {
+                val item : JSONObject = jsonArray.get(i) as JSONObject
+                val path = item.get("path") as String
+
+                if (path == "${command}/${fileName}") {
+                    result = item.get("url") as String
+                    break
+                }
+            }
+
+            return result
         }
     }
 }
