@@ -60,7 +60,7 @@ class RepoMapper {
         }
 
         private fun getURLByFileName(command :String, jsonArray: JSONArray, fileName: String): String {
-            var result :String = ""
+            var result = ""
 
             for (i in 0 until jsonArray.length()) {
                 val item : JSONObject = jsonArray.get(i) as JSONObject

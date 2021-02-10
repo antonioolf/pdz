@@ -12,7 +12,6 @@ import com.android.volley.Request
 import com.android.volley.toolbox.StringRequest
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.oliveiralabs.pdz.R
-import com.oliveiralabs.pdz.adapters.FormulasAdapter
 import com.oliveiralabs.pdz.adapters.GroupAdapter
 import com.oliveiralabs.pdz.database.AppDatabase
 import com.oliveiralabs.pdz.models.Formula
@@ -45,7 +44,7 @@ class MainActivity : AppCompatActivity(), NewRepoDialog.NewRepoDialogListener {
         val fabAddRepo = findViewById<FloatingActionButton>(R.id.fabAddRepo)
         fabAddRepo.setOnClickListener {
             val newRepoDialog = NewRepoDialog()
-            newRepoDialog.show(supportFragmentManager, "teste") // TODO: set tag = null
+            newRepoDialog.show(supportFragmentManager, null)
         }
     }
 
@@ -60,9 +59,7 @@ class MainActivity : AppCompatActivity(), NewRepoDialog.NewRepoDialogListener {
                 loadRepoItems("${item.username}/${item.repository}")
             }
 
-            override fun onNothingSelected(parent: AdapterView<*>?) {
-                TODO("Not yet implemented")
-            }
+            override fun onNothingSelected(parent: AdapterView<*>?) {}
         }
     }
 

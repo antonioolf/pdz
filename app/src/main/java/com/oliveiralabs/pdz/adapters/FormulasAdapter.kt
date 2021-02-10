@@ -29,12 +29,6 @@ class FormulasAdapter(private val items: ArrayList<Formula>) : RecyclerView.Adap
         }
     }
 
-    fun update(formulas: List<Formula>) {
-        items.clear()
-        items.addAll(formulas)
-        notifyDataSetChanged()
-    }
-
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = items[position]
         holder.formula = item
