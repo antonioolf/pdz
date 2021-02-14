@@ -19,41 +19,43 @@ class RepoMapper {
         fun updateMapping(response: String) {
             val result :MutableMap<String, List<Formula>> = mutableMapOf()
 
-            val jsonObj = JSONObject(response)
-            val jsonArray = jsonObj.getJSONArray("tree")
+            if (response.isNotEmpty()) {
+                val jsonObj = JSONObject(response)
+                val jsonArray = jsonObj.getJSONArray("tree")
 
-            val groupsDuplicated = arrayListOf<String>()
-            val formulasDuplicated = arrayListOf<String>()
+                val groupsDuplicated = arrayListOf<String>()
+                val formulasDuplicated = arrayListOf<String>()
 
-            for (i in 0 until jsonArray.length()) {
-                val item : JSONObject = jsonArray.get(i) as JSONObject
-                val mode :String = item.get("mode") as String
-                val path = item.get("path") as String
+                for (i in 0 until jsonArray.length()) {
+                    val item: JSONObject = jsonArray.get(i) as JSONObject
+                    val mode: String = item.get("mode") as String
+                    val path = item.get("path") as String
 
-                if (fileTypes.containsValue(mode) && path.contains("/src/")) {
-                    val root = path.split("/")[0]
-                    groupsDuplicated.add(root)
+                    if (fileTypes.containsValue(mode) && path.contains("/src/")) {
+                        val root = path.split("/")[0]
+                        groupsDuplicated.add(root)
 
-                    val beforeSrc = path.split("/src/")[0]
-                    formulasDuplicated.add(beforeSrc)
+                        val beforeSrc = path.split("/src/")[0]
+                        formulasDuplicated.add(beforeSrc)
+                    }
                 }
-            }
 
-            val groups = groupsDuplicated.distinct()
-            val formulas = formulasDuplicated.distinct()
+                val groups = groupsDuplicated.distinct()
+                val formulas = formulasDuplicated.distinct()
 
-            for (g in groups) {
+                for (g in groups) {
 
-                val groupFormulas :List<Formula> = formulas
-                        .filter { it.startsWith("${g}/") }
-                        .map {
+                    val groupFormulas: List<Formula> = formulas
+                            .filter { it.startsWith("${g}/") }
+                            .map {
 
-                            val helpJsonURL = getURLByFileName(it, jsonArray, "help.json")
-                            val readmeURL = getURLByFileName(it, jsonArray, "README.md")
-                            Formula(it, readmeURL, helpJsonURL)
-                        }
+                                val helpJsonURL = getURLByFileName(it, jsonArray, "help.json")
+                                val readmeURL = getURLByFileName(it, jsonArray, "README.md")
+                                Formula(it, readmeURL, helpJsonURL)
+                            }
 
-                result[g] = groupFormulas
+                    result[g] = groupFormulas
+                }
             }
 
             mapping = result
