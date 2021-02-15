@@ -27,7 +27,7 @@ class RepoTest {
 
     @Test
     @Throws(Exception::class)
-    fun `test get all repos`() {
+    fun `test insert and getAll methods`() {
         CoroutineScope(Dispatchers.IO).launch {
 
             val operation = async {
