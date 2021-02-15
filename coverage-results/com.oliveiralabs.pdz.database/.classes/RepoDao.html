@@ -1,0 +1,69 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: RepoDao</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">com.oliveiralabs.pdz.database</a> ]
+</div>
+
+<h1>Coverage Summary for Class: RepoDao (com.oliveiralabs.pdz.database)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+</tr>
+<tr>
+  <td class="name">RepoDao</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;package com.oliveiralabs.pdz.database
+<i>2</i>&nbsp;
+<i>3</i>&nbsp;import androidx.room.Dao
+<i>4</i>&nbsp;import androidx.room.Delete
+<i>5</i>&nbsp;import androidx.room.Insert
+<i>6</i>&nbsp;import androidx.room.Query
+<i>7</i>&nbsp;import com.oliveiralabs.pdz.models.Repo
+<i>8</i>&nbsp;
+<i>9</i>&nbsp;@Dao
+<i>10</i>&nbsp;interface RepoDao {
+<i>11</i>&nbsp;    @Query(&quot;SELECT * FROM repo&quot;)
+<i>12</i>&nbsp;    suspend fun getAll(): List&lt;Repo&gt;
+<i>13</i>&nbsp;
+<i>14</i>&nbsp;    @Query(&quot;SELECT * FROM repo WHERE id = :id&quot;)
+<i>15</i>&nbsp;    suspend fun findById(id: Int): Repo
+<i>16</i>&nbsp;
+<i>17</i>&nbsp;    @Insert
+<i>18</i>&nbsp;    suspend fun insert(vararg repo: Repo)
+<i>19</i>&nbsp;
+<i>20</i>&nbsp;    @Delete
+<i>21</i>&nbsp;    suspend fun delete(repo: Repo)
+<i>22</i>&nbsp;}
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2021-02-15 00:01</div>
+</div>
+</body>
+</html>

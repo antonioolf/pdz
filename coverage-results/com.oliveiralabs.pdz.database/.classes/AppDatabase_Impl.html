@@ -1,0 +1,249 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: AppDatabase_Impl</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">com.oliveiralabs.pdz.database</a> ]
+</div>
+
+<h1>Coverage Summary for Class: AppDatabase_Impl (com.oliveiralabs.pdz.database)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">AppDatabase_Impl</td>
+<td class="coverageStat">
+  <span class="percent">
+    80%
+  </span>
+  <span class="absValue">
+    (4/ 5)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    55.2%
+  </span>
+  <span class="absValue">
+    (16/ 29)
+  </span>
+</td>
+</tr>
+  <tr>
+    <td class="name">AppDatabase_Impl$1</td>
+<td class="coverageStat">
+  <span class="percent">
+    50%
+  </span>
+  <span class="absValue">
+    (4/ 8)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    32.4%
+  </span>
+  <span class="absValue">
+    (11/ 34)
+  </span>
+</td>
+  </tr>
+<tr>
+  <td class="name"><strong>total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    61.5%
+  </span>
+  <span class="absValue">
+    (8/ 13)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    42.9%
+  </span>
+  <span class="absValue">
+    (27/ 63)
+  </span>
+</td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;package com.oliveiralabs.pdz.database;
+<i>2</i>&nbsp;
+<i>3</i>&nbsp;import androidx.room.DatabaseConfiguration;
+<i>4</i>&nbsp;import androidx.room.InvalidationTracker;
+<i>5</i>&nbsp;import androidx.room.RoomOpenHelper;
+<i>6</i>&nbsp;import androidx.room.RoomOpenHelper.Delegate;
+<i>7</i>&nbsp;import androidx.room.RoomOpenHelper.ValidationResult;
+<i>8</i>&nbsp;import androidx.room.util.DBUtil;
+<i>9</i>&nbsp;import androidx.room.util.TableInfo;
+<i>10</i>&nbsp;import androidx.room.util.TableInfo.Column;
+<i>11</i>&nbsp;import androidx.room.util.TableInfo.ForeignKey;
+<i>12</i>&nbsp;import androidx.room.util.TableInfo.Index;
+<i>13</i>&nbsp;import androidx.sqlite.db.SupportSQLiteDatabase;
+<i>14</i>&nbsp;import androidx.sqlite.db.SupportSQLiteOpenHelper;
+<i>15</i>&nbsp;import androidx.sqlite.db.SupportSQLiteOpenHelper.Callback;
+<i>16</i>&nbsp;import androidx.sqlite.db.SupportSQLiteOpenHelper.Configuration;
+<i>17</i>&nbsp;import java.lang.Override;
+<i>18</i>&nbsp;import java.lang.String;
+<i>19</i>&nbsp;import java.lang.SuppressWarnings;
+<i>20</i>&nbsp;import java.util.HashMap;
+<i>21</i>&nbsp;import java.util.HashSet;
+<i>22</i>&nbsp;import java.util.Set;
+<i>23</i>&nbsp;
+<i>24</i>&nbsp;@SuppressWarnings({&quot;unchecked&quot;, &quot;deprecation&quot;})
+<b class="fc"><i>25</i>&nbsp;public final class AppDatabase_Impl extends AppDatabase {</b>
+<i>26</i>&nbsp;  private volatile RepoDao _repoDao;
+<i>27</i>&nbsp;
+<i>28</i>&nbsp;  @Override
+<i>29</i>&nbsp;  protected SupportSQLiteOpenHelper createOpenHelper(DatabaseConfiguration configuration) {
+<b class="fc"><i>30</i>&nbsp;    final SupportSQLiteOpenHelper.Callback _openCallback = new RoomOpenHelper(configuration, new RoomOpenHelper.Delegate(1) {</b>
+<i>31</i>&nbsp;      @Override
+<i>32</i>&nbsp;      public void createAllTables(SupportSQLiteDatabase _db) {
+<b class="fc"><i>33</i>&nbsp;        _db.execSQL(&quot;CREATE TABLE IF NOT EXISTS `repo` (`id` INTEGER, `username` TEXT NOT NULL, `repository` TEXT NOT NULL, PRIMARY KEY(`id`))&quot;);</b>
+<b class="fc"><i>34</i>&nbsp;        _db.execSQL(&quot;CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)&quot;);</b>
+<b class="fc"><i>35</i>&nbsp;        _db.execSQL(&quot;INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, &#39;7892fe5efbc411b5346d11acce519d56&#39;)&quot;);</b>
+<b class="fc"><i>36</i>&nbsp;      }</b>
+<i>37</i>&nbsp;
+<i>38</i>&nbsp;      @Override
+<i>39</i>&nbsp;      public void dropAllTables(SupportSQLiteDatabase _db) {
+<b class="nc"><i>40</i>&nbsp;        _db.execSQL(&quot;DROP TABLE IF EXISTS `repo`&quot;);</b>
+<b class="nc"><i>41</i>&nbsp;        if (mCallbacks != null) {</b>
+<b class="nc"><i>42</i>&nbsp;          for (int _i = 0, _size = mCallbacks.size(); _i &lt; _size; _i++) {</b>
+<b class="nc"><i>43</i>&nbsp;            mCallbacks.get(_i).onDestructiveMigration(_db);</b>
+<i>44</i>&nbsp;          }
+<i>45</i>&nbsp;        }
+<b class="nc"><i>46</i>&nbsp;      }</b>
+<i>47</i>&nbsp;
+<i>48</i>&nbsp;      @Override
+<i>49</i>&nbsp;      protected void onCreate(SupportSQLiteDatabase _db) {
+<b class="fc"><i>50</i>&nbsp;        if (mCallbacks != null) {</b>
+<b class="nc"><i>51</i>&nbsp;          for (int _i = 0, _size = mCallbacks.size(); _i &lt; _size; _i++) {</b>
+<b class="nc"><i>52</i>&nbsp;            mCallbacks.get(_i).onCreate(_db);</b>
+<i>53</i>&nbsp;          }
+<i>54</i>&nbsp;        }
+<b class="fc"><i>55</i>&nbsp;      }</b>
+<i>56</i>&nbsp;
+<i>57</i>&nbsp;      @Override
+<i>58</i>&nbsp;      public void onOpen(SupportSQLiteDatabase _db) {
+<b class="fc"><i>59</i>&nbsp;        mDatabase = _db;</b>
+<b class="fc"><i>60</i>&nbsp;        internalInitInvalidationTracker(_db);</b>
+<b class="fc"><i>61</i>&nbsp;        if (mCallbacks != null) {</b>
+<b class="nc"><i>62</i>&nbsp;          for (int _i = 0, _size = mCallbacks.size(); _i &lt; _size; _i++) {</b>
+<b class="nc"><i>63</i>&nbsp;            mCallbacks.get(_i).onOpen(_db);</b>
+<i>64</i>&nbsp;          }
+<i>65</i>&nbsp;        }
+<b class="fc"><i>66</i>&nbsp;      }</b>
+<i>67</i>&nbsp;
+<i>68</i>&nbsp;      @Override
+<i>69</i>&nbsp;      public void onPreMigrate(SupportSQLiteDatabase _db) {
+<b class="nc"><i>70</i>&nbsp;        DBUtil.dropFtsSyncTriggers(_db);</b>
+<b class="nc"><i>71</i>&nbsp;      }</b>
+<i>72</i>&nbsp;
+<i>73</i>&nbsp;      @Override
+<i>74</i>&nbsp;      public void onPostMigrate(SupportSQLiteDatabase _db) {
+<b class="nc"><i>75</i>&nbsp;      }</b>
+<i>76</i>&nbsp;
+<i>77</i>&nbsp;      @Override
+<i>78</i>&nbsp;      protected RoomOpenHelper.ValidationResult onValidateSchema(SupportSQLiteDatabase _db) {
+<b class="nc"><i>79</i>&nbsp;        final HashMap&lt;String, TableInfo.Column&gt; _columnsRepo = new HashMap&lt;String, TableInfo.Column&gt;(3);</b>
+<b class="nc"><i>80</i>&nbsp;        _columnsRepo.put(&quot;id&quot;, new TableInfo.Column(&quot;id&quot;, &quot;INTEGER&quot;, false, 1, null, TableInfo.CREATED_FROM_ENTITY));</b>
+<b class="nc"><i>81</i>&nbsp;        _columnsRepo.put(&quot;username&quot;, new TableInfo.Column(&quot;username&quot;, &quot;TEXT&quot;, true, 0, null, TableInfo.CREATED_FROM_ENTITY));</b>
+<b class="nc"><i>82</i>&nbsp;        _columnsRepo.put(&quot;repository&quot;, new TableInfo.Column(&quot;repository&quot;, &quot;TEXT&quot;, true, 0, null, TableInfo.CREATED_FROM_ENTITY));</b>
+<b class="nc"><i>83</i>&nbsp;        final HashSet&lt;TableInfo.ForeignKey&gt; _foreignKeysRepo = new HashSet&lt;TableInfo.ForeignKey&gt;(0);</b>
+<b class="nc"><i>84</i>&nbsp;        final HashSet&lt;TableInfo.Index&gt; _indicesRepo = new HashSet&lt;TableInfo.Index&gt;(0);</b>
+<b class="nc"><i>85</i>&nbsp;        final TableInfo _infoRepo = new TableInfo(&quot;repo&quot;, _columnsRepo, _foreignKeysRepo, _indicesRepo);</b>
+<b class="nc"><i>86</i>&nbsp;        final TableInfo _existingRepo = TableInfo.read(_db, &quot;repo&quot;);</b>
+<b class="nc"><i>87</i>&nbsp;        if (! _infoRepo.equals(_existingRepo)) {</b>
+<b class="nc"><i>88</i>&nbsp;          return new RoomOpenHelper.ValidationResult(false, &quot;repo(com.oliveiralabs.pdz.models.Repo).\n&quot;</b>
+<i>89</i>&nbsp;                  + &quot; Expected:\n&quot; + _infoRepo + &quot;\n&quot;
+<i>90</i>&nbsp;                  + &quot; Found:\n&quot; + _existingRepo);
+<i>91</i>&nbsp;        }
+<b class="nc"><i>92</i>&nbsp;        return new RoomOpenHelper.ValidationResult(true, null);</b>
+<i>93</i>&nbsp;      }
+<i>94</i>&nbsp;    }, &quot;7892fe5efbc411b5346d11acce519d56&quot;, &quot;bd14314eab668e595a5157b805d598d0&quot;);
+<b class="fc"><i>95</i>&nbsp;    final SupportSQLiteOpenHelper.Configuration _sqliteConfig = SupportSQLiteOpenHelper.Configuration.builder(configuration.context)</b>
+<b class="fc"><i>96</i>&nbsp;        .name(configuration.name)</b>
+<b class="fc"><i>97</i>&nbsp;        .callback(_openCallback)</b>
+<b class="fc"><i>98</i>&nbsp;        .build();</b>
+<b class="fc"><i>99</i>&nbsp;    final SupportSQLiteOpenHelper _helper = configuration.sqliteOpenHelperFactory.create(_sqliteConfig);</b>
+<b class="fc"><i>100</i>&nbsp;    return _helper;</b>
+<i>101</i>&nbsp;  }
+<i>102</i>&nbsp;
+<i>103</i>&nbsp;  @Override
+<i>104</i>&nbsp;  protected InvalidationTracker createInvalidationTracker() {
+<b class="fc"><i>105</i>&nbsp;    final HashMap&lt;String, String&gt; _shadowTablesMap = new HashMap&lt;String, String&gt;(0);</b>
+<b class="fc"><i>106</i>&nbsp;    HashMap&lt;String, Set&lt;String&gt;&gt; _viewTables = new HashMap&lt;String, Set&lt;String&gt;&gt;(0);</b>
+<b class="fc"><i>107</i>&nbsp;    return new InvalidationTracker(this, _shadowTablesMap, _viewTables, &quot;repo&quot;);</b>
+<i>108</i>&nbsp;  }
+<i>109</i>&nbsp;
+<i>110</i>&nbsp;  @Override
+<i>111</i>&nbsp;  public void clearAllTables() {
+<b class="nc"><i>112</i>&nbsp;    super.assertNotMainThread();</b>
+<b class="nc"><i>113</i>&nbsp;    final SupportSQLiteDatabase _db = super.getOpenHelper().getWritableDatabase();</b>
+<i>114</i>&nbsp;    try {
+<b class="nc"><i>115</i>&nbsp;      super.beginTransaction();</b>
+<b class="nc"><i>116</i>&nbsp;      _db.execSQL(&quot;DELETE FROM `repo`&quot;);</b>
+<b class="nc"><i>117</i>&nbsp;      super.setTransactionSuccessful();</b>
+<i>118</i>&nbsp;    } finally {
+<b class="nc"><i>119</i>&nbsp;      super.endTransaction();</b>
+<b class="nc"><i>120</i>&nbsp;      _db.query(&quot;PRAGMA wal_checkpoint(FULL)&quot;).close();</b>
+<b class="nc"><i>121</i>&nbsp;      if (!_db.inTransaction()) {</b>
+<b class="nc"><i>122</i>&nbsp;        _db.execSQL(&quot;VACUUM&quot;);</b>
+<i>123</i>&nbsp;      }
+<b class="nc"><i>124</i>&nbsp;    }</b>
+<b class="nc"><i>125</i>&nbsp;  }</b>
+<i>126</i>&nbsp;
+<i>127</i>&nbsp;  @Override
+<i>128</i>&nbsp;  public RepoDao repoDao() {
+<b class="fc"><i>129</i>&nbsp;    if (_repoDao != null) {</b>
+<b class="nc"><i>130</i>&nbsp;      return _repoDao;</b>
+<i>131</i>&nbsp;    } else {
+<b class="fc"><i>132</i>&nbsp;      synchronized(this) {</b>
+<b class="fc"><i>133</i>&nbsp;        if(_repoDao == null) {</b>
+<b class="fc"><i>134</i>&nbsp;          _repoDao = new RepoDao_Impl(this);</b>
+<i>135</i>&nbsp;        }
+<b class="fc"><i>136</i>&nbsp;        return _repoDao;</b>
+<b class="nc"><i>137</i>&nbsp;      }</b>
+<i>138</i>&nbsp;    }
+<i>139</i>&nbsp;  }
+<i>140</i>&nbsp;}
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2021-02-15 00:01</div>
+</div>
+</body>
+</html>

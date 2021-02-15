@@ -1,11 +1,9 @@
 package com.oliveiralabs.pdz.other
 
 import com.google.common.truth.Truth.assertThat
-import com.oliveiralabs.pdz.activities.MainActivity
 import com.oliveiralabs.pdz.models.Formula
 import com.oliveiralabs.pdz.others.RepoMapper
 import org.junit.Test
-import org.robolectric.Robolectric
 
 
 class RepoMapperTest {
