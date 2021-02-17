@@ -1,0 +1,334 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: MainActivity</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">com.oliveiralabs.pdz.activities</a> ]
+</div>
+
+<h1>Coverage Summary for Class: MainActivity (com.oliveiralabs.pdz.activities)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">MainActivity</td>
+<td class="coverageStat">
+  <span class="percent">
+    75%
+  </span>
+  <span class="absValue">
+    (6/ 8)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    73.5%
+  </span>
+  <span class="absValue">
+    (25/ 34)
+  </span>
+</td>
+</tr>
+  <tr>
+    <td class="name">MainActivity$setFabAddRepo$1</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 3)
+  </span>
+</td>
+  </tr>
+  <tr>
+    <td class="name">MainActivity$setRepos$1</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/ 1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (5/ 5)
+  </span>
+</td>
+  </tr>
+  <tr>
+    <td class="name">MainActivity$setRepos$1$1</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/ 1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    58.3%
+  </span>
+  <span class="absValue">
+    (7/ 12)
+  </span>
+</td>
+  </tr>
+  <tr>
+    <td class="name">MainActivity$setRepos$1$operation$1</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/ 1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (8/ 8)
+  </span>
+</td>
+  </tr>
+  <tr>
+    <td class="name">MainActivity$setSpinnerRepos$1</td>
+<td class="coverageStat">
+  <span class="percent">
+    33.3%
+  </span>
+  <span class="absValue">
+    (1/ 3)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    20%
+  </span>
+  <span class="absValue">
+    (1/ 5)
+  </span>
+</td>
+  </tr>
+<tr>
+  <td class="name"><strong>total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    66.7%
+  </span>
+  <span class="absValue">
+    (10/ 15)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    68.7%
+  </span>
+  <span class="absValue">
+    (46/ 67)
+  </span>
+</td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;package com.oliveiralabs.pdz.activities
+<i>2</i>&nbsp;
+<i>3</i>&nbsp;import android.app.AlertDialog
+<i>4</i>&nbsp;import android.os.Bundle
+<i>5</i>&nbsp;import android.view.View
+<i>6</i>&nbsp;import android.widget.*
+<i>7</i>&nbsp;import androidx.appcompat.app.AppCompatActivity
+<i>8</i>&nbsp;import androidx.recyclerview.widget.LinearLayoutManager
+<i>9</i>&nbsp;import androidx.recyclerview.widget.RecyclerView
+<i>10</i>&nbsp;import androidx.room.Room
+<i>11</i>&nbsp;import com.android.volley.Request
+<i>12</i>&nbsp;import com.android.volley.toolbox.StringRequest
+<i>13</i>&nbsp;import com.google.android.material.floatingactionbutton.FloatingActionButton
+<i>14</i>&nbsp;import com.oliveiralabs.pdz.R
+<i>15</i>&nbsp;import com.oliveiralabs.pdz.adapters.GroupAdapter
+<i>16</i>&nbsp;import com.oliveiralabs.pdz.database.AppDatabase
+<i>17</i>&nbsp;import com.oliveiralabs.pdz.models.Formula
+<i>18</i>&nbsp;import com.oliveiralabs.pdz.models.Repo
+<i>19</i>&nbsp;import com.oliveiralabs.pdz.others.NewRepoDialog
+<i>20</i>&nbsp;import com.oliveiralabs.pdz.others.RepoMapper
+<i>21</i>&nbsp;import com.oliveiralabs.pdz.others.RequestQueueSingleton
+<i>22</i>&nbsp;import kotlinx.coroutines.*
+<i>23</i>&nbsp;
+<b class="fc"><i>24</i>&nbsp;class MainActivity : AppCompatActivity(), NewRepoDialog.NewRepoDialogListener {</b>
+<i>25</i>&nbsp;
+<i>26</i>&nbsp;    private lateinit var repos: List&lt;Repo&gt;
+<i>27</i>&nbsp;    private lateinit var groupAdapter: GroupAdapter
+<i>28</i>&nbsp;    private lateinit var spinnerRepoAdapter: ArrayAdapter&lt;String?&gt;
+<i>29</i>&nbsp;    private lateinit var pbGroup: ProgressBar
+<i>30</i>&nbsp;
+<i>31</i>&nbsp;    override fun onCreate(savedInstanceState: Bundle?) {
+<b class="fc"><i>32</i>&nbsp;        super.onCreate(savedInstanceState)</b>
+<b class="fc"><i>33</i>&nbsp;        setContentView(R.layout.activity_main)</b>
+<i>34</i>&nbsp;
+<b class="fc"><i>35</i>&nbsp;        pbGroup = findViewById(R.id.pbGroup)</b>
+<i>36</i>&nbsp;
+<b class="fc"><i>37</i>&nbsp;        setFabAddRepo()</b>
+<b class="fc"><i>38</i>&nbsp;        setSpinnerRepos()</b>
+<b class="fc"><i>39</i>&nbsp;        setRepos()</b>
+<b class="fc"><i>40</i>&nbsp;        setGroups()</b>
+<b class="fc"><i>41</i>&nbsp;    }</b>
+<i>42</i>&nbsp;
+<i>43</i>&nbsp;    private fun setFabAddRepo() {
+<b class="fc"><i>44</i>&nbsp;        val fabAddRepo = findViewById&lt;FloatingActionButton&gt;(R.id.fabAddRepo)</b>
+<b class="fc"><i>45</i>&nbsp;        fabAddRepo.setOnClickListener {</b>
+<b class="nc"><i>46</i>&nbsp;            val newRepoDialog = NewRepoDialog()</b>
+<b class="nc"><i>47</i>&nbsp;            newRepoDialog.show(supportFragmentManager, null)</b>
+<b class="nc"><i>48</i>&nbsp;        }</b>
+<b class="fc"><i>49</i>&nbsp;    }</b>
+<i>50</i>&nbsp;
+<i>51</i>&nbsp;    private fun setSpinnerRepos() {
+<b class="fc"><i>52</i>&nbsp;        val spinner: Spinner = findViewById(R.id.spinnerRepo)</b>
+<i>53</i>&nbsp;
+<b class="fc"><i>54</i>&nbsp;        spinnerRepoAdapter = ArrayAdapter(this, R.layout.spinner_item, arrayListOf())</b>
+<b class="fc"><i>55</i>&nbsp;        spinner.adapter = spinnerRepoAdapter</b>
+<b class="fc"><i>56</i>&nbsp;        spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {</b>
+<i>57</i>&nbsp;            override fun onItemSelected(parent: AdapterView&lt;*&gt;?, view: View?, position: Int, id: Long) {
+<b class="nc"><i>58</i>&nbsp;                val item :Repo = repos[position]</b>
+<b class="nc"><i>59</i>&nbsp;                loadRepoItems(&quot;${item.username}/${item.repository}&quot;)</b>
+<b class="nc"><i>60</i>&nbsp;            }</b>
+<i>61</i>&nbsp;
+<b class="nc"><i>62</i>&nbsp;            override fun onNothingSelected(parent: AdapterView&lt;*&gt;?) {}</b>
+<i>63</i>&nbsp;        }
+<b class="fc"><i>64</i>&nbsp;    }</b>
+<i>65</i>&nbsp;
+<i>66</i>&nbsp;    private fun setRepos() {
+<b class="fc"><i>67</i>&nbsp;        CoroutineScope(Dispatchers.IO).launch {</b>
+<b class="fc"><i>68</i>&nbsp;            val operation = async {</b>
+<i>69</i>&nbsp;
+<b class="fc"><i>70</i>&nbsp;                val db = Room.databaseBuilder(</b>
+<b class="fc"><i>71</i>&nbsp;                        applicationContext,</b>
+<b class="fc"><i>72</i>&nbsp;                        AppDatabase::class.java,</b>
+<b class="fc"><i>73</i>&nbsp;                        resources.getString(R.string.database_name)</b>
+<b class="fc"><i>74</i>&nbsp;                ).build()</b>
+<i>75</i>&nbsp;
+<b class="fc"><i>76</i>&nbsp;                repos = db.repoDao().getAll()</b>
+<b class="fc"><i>77</i>&nbsp;            }</b>
+<i>78</i>&nbsp;
+<b class="fc"><i>79</i>&nbsp;            operation.await()</b>
+<b class="fc"><i>80</i>&nbsp;            withContext(Dispatchers.Main) {</b>
+<b class="fc"><i>81</i>&nbsp;                pbGroup.visibility = View.GONE</b>
+<b class="fc"><i>82</i>&nbsp;                if (repos.isEmpty()) {</b>
+<i>83</i>&nbsp;
+<b class="fc"><i>84</i>&nbsp;                    findViewById&lt;LinearLayout&gt;(R.id.llEmptyRepoList).visibility = View.VISIBLE</b>
+<b class="fc"><i>85</i>&nbsp;                    findViewById&lt;Spinner&gt;(R.id.spinnerRepo).visibility = View.GONE</b>
+<i>86</i>&nbsp;                } else {
+<b class="nc"><i>87</i>&nbsp;                    spinnerRepoAdapter.clear()</b>
+<b class="nc"><i>88</i>&nbsp;                    spinnerRepoAdapter.addAll(repos.map { &quot;${it.username} / ${it.repository}&quot; })</b>
+<b class="nc"><i>89</i>&nbsp;                    spinnerRepoAdapter.notifyDataSetChanged()</b>
+<i>90</i>&nbsp;
+<b class="nc"><i>91</i>&nbsp;                    findViewById&lt;LinearLayout&gt;(R.id.llEmptyRepoList).visibility = View.GONE</b>
+<b class="nc"><i>92</i>&nbsp;                    findViewById&lt;Spinner&gt;(R.id.spinnerRepo).visibility = View.VISIBLE</b>
+<b class="fc"><i>93</i>&nbsp;                }</b>
+<b class="fc"><i>94</i>&nbsp;            }</b>
+<b class="fc"><i>95</i>&nbsp;        }</b>
+<b class="fc"><i>96</i>&nbsp;    }</b>
+<i>97</i>&nbsp;
+<i>98</i>&nbsp;    private fun setGroups() {
+<b class="fc"><i>99</i>&nbsp;        groupAdapter = GroupAdapter(arrayListOf())</b>
+<b class="fc"><i>100</i>&nbsp;        val layoutManager = LinearLayoutManager(this)</b>
+<b class="fc"><i>101</i>&nbsp;        val rvGroup = findViewById&lt;RecyclerView&gt;(R.id.rvGroup)</b>
+<b class="fc"><i>102</i>&nbsp;        rvGroup.adapter = groupAdapter</b>
+<b class="fc"><i>103</i>&nbsp;        rvGroup.layoutManager = layoutManager</b>
+<b class="fc"><i>104</i>&nbsp;    }</b>
+<i>105</i>&nbsp;
+<i>106</i>&nbsp;    private fun loadRepoItems(userRepoSlug :String) {
+<b class="nc"><i>107</i>&nbsp;        pbGroup.visibility = View.VISIBLE</b>
+<b class="nc"><i>108</i>&nbsp;        val queue = RequestQueueSingleton.getInstance(this.applicationContext).requestQueue</b>
+<b class="nc"><i>109</i>&nbsp;        val stringRequest = StringRequest(Request.Method.GET, &quot;${getString(R.string.base_url)}/repos/${userRepoSlug}/git/trees/master?recursive=1&quot;,</b>
+<b class="nc"><i>110</i>&nbsp;                { response -&gt;</b>
+<i>111</i>&nbsp;                    RepoMapper.updateMapping(response)
+<i>112</i>&nbsp;                    val repoMap :MutableMap&lt;String, List&lt;Formula&gt;&gt; = RepoMapper.getMapping()
+<i>113</i>&nbsp;
+<i>114</i>&nbsp;                    groupAdapter.update(repoMap.keys.map { it })
+<i>115</i>&nbsp;                    groupAdapter.notifyDataSetChanged()
+<i>116</i>&nbsp;
+<i>117</i>&nbsp;                    pbGroup.visibility = View.GONE
+<i>118</i>&nbsp;                },
+<b class="nc"><i>119</i>&nbsp;                {</b>
+<i>120</i>&nbsp;                    Toast.makeText(this, getString(R.string.error_load_repo_items), Toast.LENGTH_SHORT).show()
+<i>121</i>&nbsp;                    pbGroup.visibility = View.GONE
+<i>122</i>&nbsp;                }
+<i>123</i>&nbsp;        )
+<i>124</i>&nbsp;
+<b class="nc"><i>125</i>&nbsp;        queue.add(stringRequest)</b>
+<b class="nc"><i>126</i>&nbsp;    }</b>
+<i>127</i>&nbsp;
+<i>128</i>&nbsp;    override fun onDialogPositiveClick(dialog: AlertDialog, username: String, repository: String) {
+<b class="nc"><i>129</i>&nbsp;        CoroutineScope(Dispatchers.IO).launch {</b>
+<i>130</i>&nbsp;            val operation = async {
+<i>131</i>&nbsp;
+<i>132</i>&nbsp;                val db = Room.databaseBuilder(
+<i>133</i>&nbsp;                        applicationContext,
+<i>134</i>&nbsp;                        AppDatabase::class.java,
+<i>135</i>&nbsp;                        resources.getString(R.string.database_name)
+<i>136</i>&nbsp;                ).build()
+<i>137</i>&nbsp;
+<i>138</i>&nbsp;                val repo = Repo(null, username, repository)
+<i>139</i>&nbsp;                db.repoDao().insert(repo)
+<i>140</i>&nbsp;            }
+<i>141</i>&nbsp;
+<i>142</i>&nbsp;            /*val result = */operation.await()
+<i>143</i>&nbsp;            withContext(Dispatchers.Main) {
+<i>144</i>&nbsp;                dialog.dismiss()
+<i>145</i>&nbsp;                setRepos()
+<i>146</i>&nbsp;            }
+<i>147</i>&nbsp;        }
+<b class="nc"><i>148</i>&nbsp;    }</b>
+<i>149</i>&nbsp;}
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2021-02-15 13:11</div>
+</div>
+</body>
+</html>

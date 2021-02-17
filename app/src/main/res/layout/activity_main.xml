@@ -24,6 +24,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
         <TextView
+            android:id="@+id/tvEmptyRepoList"
             android:text="@string/add_one_or_more_repos"
             android:gravity="center"
             android:layout_width="match_parent"

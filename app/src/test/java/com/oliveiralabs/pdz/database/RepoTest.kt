@@ -50,49 +50,4 @@ class RepoTest {
             operation.await()
         }
     }
-
-    /*  @Test
-  @Throws(Exception::class)
-  fun `test repo insertion and selection`() {
-      CoroutineScope(Dispatchers.IO).launch {
-
-          val operation = async {
-              val db = setupDatabase()
-              val repoDao = db.repoDao()
-
-              val repo = Repo(1, "antonioolf", "formulas-antonio")
-              repoDao.insert(repo)
-              val inserted = repoDao.findById(1)
-              assertThat(inserted).isEqualTo(repo)
-
-              db.close()
-          }
-
-          operation.await()
-      }
-  }*/
-/*
-    @Test
-    @Throws(Exception::class)
-    fun `test repo delete`() {
-        CoroutineScope(Dispatchers.IO).launch {
-
-            val operation = async {
-                val db = setupDatabase()
-                val repoDao = db.repoDao()
-
-                val repo = Repo(1, "antonioolf", "formulas-antonio")
-                repoDao.insert(repo)
-
-                repoDao.delete(repo)
-
-                val inserted = repoDao.findById(1)
-                assertThat(inserted).isNull()
-
-                db.close()
-            }
-
-            operation.await()
-        }
-    }*/
 }

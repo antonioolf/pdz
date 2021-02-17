@@ -1,12 +1,12 @@
 package com.oliveiralabs.pdz.activities
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Base64
 import android.view.View
 import android.widget.ProgressBar
 import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import com.android.volley.Request
 import com.android.volley.toolbox.StringRequest
 import com.oliveiralabs.pdz.R
@@ -15,14 +15,14 @@ import io.noties.markwon.Markwon
 import org.json.JSONObject
 
 class FormulaActivity : AppCompatActivity() {
-    override fun onCreate(savedInstanceState: Bundle?) {
+    public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_formula)
 
         val readmeURL = intent.getStringExtra("readmeURL").toString()
         val command = intent.getStringExtra("command").toString()
         val ritCommand = "rit ${command.split("/").joinToString(" ") }"
-        findViewById<TextView>(R.id.formulaCommand).text = ritCommand
+        findViewById<TextView>(R.id.tvFormulaCommand).text = ritCommand
         /*intent.getStringExtra("helpJsonURL")*/
 
         loadMarkdown(readmeURL)

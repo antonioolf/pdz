@@ -112,7 +112,6 @@ class MainActivity : AppCompatActivity(), NewRepoDialog.NewRepoDialogListener {
                     val repoMap :MutableMap<String, List<Formula>> = RepoMapper.getMapping()
 
                     groupAdapter.update(repoMap.keys.map { it })
-                    groupAdapter.notifyDataSetChanged()
 
                     pbGroup.visibility = View.GONE
                 },
