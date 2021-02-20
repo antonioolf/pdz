@@ -1,25 +1,53 @@
-## PDZ - Testes unitários
+## PDZ - Testes no Android
+
+### Conceitos
+
+* Pirâmide de testes
+
+![Pirâmide de testes](doc/pyramid.png)
+
+Em resumo, a pirâmide de testes é uma estratégia de divisão de testes no em um projeto. Nessa divisão, as camadas mais inferiores contêm testes mais rápidos, baratos e isolados ao comportamento da aplicação. Na parte superior da pirâmide teremos testes mais lentos, caros e integrados.
+O Google possui sua própria definição de pirâmide para Android, que está dividida nas camadas small, medium e large. De acordo com eles, a divisão ideal de testes para Android seria:
+
+#### Níveis da pirâmide de testes
+Testes pequenos são testes de unidade que validam o comportamento do app, uma classe por vez.
+Testes médios são testes de integração que validam interações entre níveis da pilha dentro de um módulo ou interações entre módulos relacionados.
+Testes grandes são testes de ponta a ponta que validam as jornadas do usuário, abrangendo vários módulos do app.
+
+#### Recomendação
+```text
+70% testes small ou unitários
+20% testes medium ou integrados
+10% testes large ou end-to-end
+```
+
 
 ### Testes unitários
 
-* JUnit4
+* Não instrumentados
+* São executados sem a necessidade de um emulador ou um dispositivo
+* Ficam no pacote `test`
 
-* Robolectric
-    - Permite a execução rápida e confiável de testes no Android sem a necessidade de utilizar o emulador ou um dispositivo real. Os testes são executados dentro da JVM.
+* Ferramentas utilizadas no app
+    * JUnit4
 
+    * Robolectric
+        - Permite executar testes dentro de um sandbox que simula o comportamento do Android de forma assertiva, sem utilizar emulador/dispositivo. Os testes são executados dentro da JVM.
 
-* Biblioteca Truth para declarações de assertividade mais legíveis
-
-
-    Ex:
-```kotlin
-assertThat(obj).hasFlags(FLAGS)
-assertThat(obj).doesNotHaveFlags(FLAGS)
-assertThat(intent).hasData(URI)
-assertThat(extras).string(string_key).equals(EXPECTED)
-```
+    * Biblioteca `Truth` para declarações de assertividade mais legíveis
+        Ex:
+        ```kotlin
+        assertThat(obj).hasFlags(FLAGS)
+        assertThat(obj).doesNotHaveFlags(FLAGS)
+        assertThat(intent).hasData(URI)
+        assertThat(extras).string(string_key).equals(EXPECTED)
+        ```
 
 ### Testes de UI - Framework Espresso
+
+* Instrumentados
+* Rodam no emulador ou dispositivo
+* Ficam no pacote `androidTest`
 
 ```kotlin
 @Test
@@ -36,8 +64,22 @@ fun greeterSaysHello() {
     * ViewActions: um conjunto de objetos ViewAction que podem ser transmitidos para o método ViewInteraction.perform(), como click().
     * ViewAssertions: um conjunto de objetos ViewAssertion que podem ser transmitidos ao método ViewInteraction.check(). Na maioria das vezes, você usará a declaração de correspondências, que usa um matcher de visualização para declarar o estado da visualização selecionada no momento.
 
+- Recurso "Espresso test recorder"
+    Gera o código de um teste do Espresso a partir de uma "Gravação" feita no emulador
+    
+    * Vantagens: 
+        - Ótimo para entender como o framework funciona
+        - Tirar dúvidas mais rapidamente e menor necessidade de consultar outras fontes
+        
+    * Desvantagens:
+        - O código gerado fica muito grande, por ter sido gerado de forma genérica
+        - Boa parte do código gerado é desnecessário
+        - Nem sempre o código gerado é válido
+
+
 #### Fontes:
 * https://developer.android.com/training/testing/fundamentals
 * https://developer.android.com/training/testing/unit-testing
 * https://developer.android.com/training/testing/espresso
 * http://robolectric.org/getting-started/
+* https://medium.com/android-dev-br/explorando-a-pir%C3%A2mide-de-testes-no-android-parte-1-18ea135808df
