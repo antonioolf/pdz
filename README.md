@@ -6,8 +6,10 @@
 
 ![Pirâmide de testes](doc/pyramid.png)
 
-Em resumo, a pirâmide de testes é uma estratégia de divisão de testes no em um projeto. Nessa divisão, as camadas mais inferiores contêm testes mais rápidos, baratos e isolados ao comportamento da aplicação. Na parte superior da pirâmide teremos testes mais lentos, caros e integrados.
-O Google possui sua própria definição de pirâmide para Android, que está dividida nas camadas small, medium e large. De acordo com eles, a divisão ideal de testes para Android seria:
+Em resumo, a pirâmide de testes é uma estratégia de divisão de testes no em um projeto. 
+
+Parte inferior: rápidos, baratos e isolados ao comportamento da aplicação. 
+Parte superior: lentos, caros e integrados.
 
 #### Níveis da pirâmide de testes
 Testes pequenos são testes de unidade que validam o comportamento do app, uma classe por vez.
