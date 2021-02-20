@@ -21,13 +21,10 @@ assertThat(intent).hasData(URI)
 assertThat(extras).string(string_key).equals(EXPECTED)
 ```
 
-### Testes de UI
+### Testes de UI - Framework Espresso
 
-* Framework Espresso
-
-Exemplo
 ```kotlin
- @Test
+@Test
 fun greeterSaysHello() {
     onView(withId(R.id.name_field)).perform(typeText("Steve"))
     onView(withId(R.id.greet_button)).perform(click())
@@ -35,8 +32,8 @@ fun greeterSaysHello() {
 }
 ```
 
-    - Conceitos chave
-        1. Espresso: ponto de entrada para interações com visualizações (via onView() e onData()). Também expõe APIs que não estão necessariamente vinculadas a nenhuma visualização, como pressBack().
-        2. ViewMatchers: um conjunto de objetos que implementam a interface Matcher<? super View>. Você pode transmitir um ou mais deles ao método onView() para localizar uma visualização na hierarquia atual.
-        3. ViewActions: um conjunto de objetos ViewAction que podem ser transmitidos para o método ViewInteraction.perform(), como click().
-        4. ViewAssertions: um conjunto de objetos ViewAssertion que podem ser transmitidos ao método ViewInteraction.check(). Na maioria das vezes, você usará a declaração de correspondências, que usa um matcher de visualização para declarar o estado da visualização selecionada no momento.
+- Conceitos chave
+    * Espresso: ponto de entrada para interações com visualizações (via onView() e onData()). Também expõe APIs que não estão necessariamente vinculadas a nenhuma visualização, como pressBack().
+    * ViewMatchers: um conjunto de objetos que implementam a interface Matcher<? super View>. Você pode transmitir um ou mais deles ao método onView() para localizar uma visualização na hierarquia atual.
+    * ViewActions: um conjunto de objetos ViewAction que podem ser transmitidos para o método ViewInteraction.perform(), como click().
+    * ViewAssertions: um conjunto de objetos ViewAssertion que podem ser transmitidos ao método ViewInteraction.check(). Na maioria das vezes, você usará a declaração de correspondências, que usa um matcher de visualização para declarar o estado da visualização selecionada no momento.
