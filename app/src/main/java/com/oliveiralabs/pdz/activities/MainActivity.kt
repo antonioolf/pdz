@@ -8,6 +8,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.room.Room
+import androidx.test.espresso.idling.CountingIdlingResource
 import com.android.volley.Request
 import com.android.volley.toolbox.StringRequest
 import com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -21,12 +22,14 @@ import com.oliveiralabs.pdz.others.RepoMapper
 import com.oliveiralabs.pdz.others.RequestQueueSingleton
 import kotlinx.coroutines.*
 
+
 class MainActivity : AppCompatActivity(), NewRepoDialog.NewRepoDialogListener {
 
     private lateinit var repos: List<Repo>
     private lateinit var groupAdapter: GroupAdapter
     private lateinit var spinnerRepoAdapter: ArrayAdapter<String?>
     private lateinit var pbGroup: ProgressBar
+    private val countingIdlingResource :CountingIdlingResource = CountingIdlingResource("IdlingResource")
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -54,7 +57,12 @@ class MainActivity : AppCompatActivity(), NewRepoDialog.NewRepoDialogListener {
         spinnerRepoAdapter = ArrayAdapter(this, R.layout.spinner_item, arrayListOf())
         spinner.adapter = spinnerRepoAdapter
         spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+            override fun onItemSelected(
+                parent: AdapterView<*>?,
+                view: View?,
+                position: Int,
+                id: Long
+            ) {
                 val item :Repo = repos[position]
                 loadRepoItems("${item.username}/${item.repository}")
             }
@@ -64,13 +72,14 @@ class MainActivity : AppCompatActivity(), NewRepoDialog.NewRepoDialogListener {
     }
 
     private fun setRepos() {
+        countingIdlingResource.increment()
         CoroutineScope(Dispatchers.IO).launch {
             val operation = async {
 
                 val db = Room.databaseBuilder(
-                        applicationContext,
-                        AppDatabase::class.java,
-                        resources.getString(R.string.database_name)
+                    applicationContext,
+                    AppDatabase::class.java,
+                    resources.getString(R.string.database_name)
                 ).build()
 
                 repos = db.repoDao().getAll()
@@ -91,6 +100,8 @@ class MainActivity : AppCompatActivity(), NewRepoDialog.NewRepoDialogListener {
                     findViewById<LinearLayout>(R.id.llEmptyRepoList).visibility = View.GONE
                     findViewById<Spinner>(R.id.spinnerRepo).visibility = View.VISIBLE
                 }
+
+                countingIdlingResource.decrement()
             }
         }
     }
@@ -103,22 +114,27 @@ class MainActivity : AppCompatActivity(), NewRepoDialog.NewRepoDialogListener {
         rvGroup.layoutManager = layoutManager
     }
 
-    private fun loadRepoItems(userRepoSlug :String) {
+    private fun loadRepoItems(userRepoSlug: String) {
         pbGroup.visibility = View.VISIBLE
         val queue = RequestQueueSingleton.getInstance(this.applicationContext).requestQueue
-        val stringRequest = StringRequest(Request.Method.GET, "${getString(R.string.base_url)}/repos/${userRepoSlug}/git/trees/master?recursive=1",
-                { response ->
-                    RepoMapper.updateMapping(response)
-                    val repoMap :MutableMap<String, List<Formula>> = RepoMapper.getMapping()
+        val stringRequest = StringRequest(Request.Method.GET,
+            "${getString(R.string.base_url)}/repos/${userRepoSlug}/git/trees/master?recursive=1",
+            { response ->
+                RepoMapper.updateMapping(response)
+                val repoMap: MutableMap<String, List<Formula>> = RepoMapper.getMapping()
 
-                    groupAdapter.update(repoMap.keys.map { it })
+                groupAdapter.update(repoMap.keys.map { it })
 
-                    pbGroup.visibility = View.GONE
-                },
-                {
-                    Toast.makeText(this, getString(R.string.error_load_repo_items), Toast.LENGTH_SHORT).show()
-                    pbGroup.visibility = View.GONE
-                }
+                pbGroup.visibility = View.GONE
+            },
+            {
+                Toast.makeText(
+                    this,
+                    getString(R.string.error_load_repo_items),
+                    Toast.LENGTH_SHORT
+                ).show()
+                pbGroup.visibility = View.GONE
+            }
         )
 
         queue.add(stringRequest)
@@ -129,9 +145,9 @@ class MainActivity : AppCompatActivity(), NewRepoDialog.NewRepoDialogListener {
             val operation = async {
 
                 val db = Room.databaseBuilder(
-                        applicationContext,
-                        AppDatabase::class.java,
-                        resources.getString(R.string.database_name)
+                    applicationContext,
+                    AppDatabase::class.java,
+                    resources.getString(R.string.database_name)
                 ).build()
 
                 val repo = Repo(null, username, repository)
@@ -144,5 +160,9 @@ class MainActivity : AppCompatActivity(), NewRepoDialog.NewRepoDialogListener {
                 setRepos()
             }
         }
+    }
+
+    fun getCountingIdlingResource(): CountingIdlingResource {
+        return countingIdlingResource
     }
 }

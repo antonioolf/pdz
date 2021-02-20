@@ -1,9 +1,6 @@
 package com.oliveiralabs.pdz.database
 
-import android.content.Context
 import android.os.Build
-import androidx.room.Room
-import androidx.test.core.app.ApplicationProvider
 import com.google.common.truth.Truth.assertThat
 import com.oliveiralabs.pdz.models.Repo
 import kotlinx.coroutines.CoroutineScope
@@ -20,18 +17,13 @@ import org.robolectric.annotation.Config
 @RunWith(RobolectricTestRunner::class)
 class RepoTest {
 
-    private fun setupDatabase(): AppDatabase {
-        val context = ApplicationProvider.getApplicationContext<Context>()
-        return Room.inMemoryDatabaseBuilder(context, AppDatabase::class.java).build()
-    }
-
     @Test
     @Throws(Exception::class)
     fun `test insert and getAll methods`() {
         CoroutineScope(Dispatchers.IO).launch {
 
             val operation = async {
-                val db = setupDatabase()
+                val db = DbTestUtil.getDatabase()
                 val repoDao = db.repoDao()
 
                 repoDao.insert(
