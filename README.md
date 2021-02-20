@@ -1,7 +1,5 @@
 ## PDZ - Testes unitários
 
-### Ferramentas utilizadas
-
 ### Testes unitários
 
 * JUnit4
