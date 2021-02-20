@@ -37,3 +37,9 @@ fun greeterSaysHello() {
     * ViewMatchers: um conjunto de objetos que implementam a interface Matcher<? super View>. Você pode transmitir um ou mais deles ao método onView() para localizar uma visualização na hierarquia atual.
     * ViewActions: um conjunto de objetos ViewAction que podem ser transmitidos para o método ViewInteraction.perform(), como click().
     * ViewAssertions: um conjunto de objetos ViewAssertion que podem ser transmitidos ao método ViewInteraction.check(). Na maioria das vezes, você usará a declaração de correspondências, que usa um matcher de visualização para declarar o estado da visualização selecionada no momento.
+
+#### Fontes:
+* https://developer.android.com/training/testing/fundamentals
+* https://developer.android.com/training/testing/unit-testing
+* https://developer.android.com/training/testing/espresso
+* http://robolectric.org/getting-started/
