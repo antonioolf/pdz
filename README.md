@@ -5,7 +5,7 @@
 * Testes unitários
 * Testes de User interface
 
-![Categorias de testes](doc/test_categories.webp)
+![Categorias de testes](doc/test_categories.png)
 
 * Pirâmide de testes
 
