@@ -2,11 +2,16 @@
 
 ### Conceitos
 
+* Testes unitários
+* Testes de User interface
+
+![Categorias de testes](doc/test_categories.webp)
+
 * Pirâmide de testes
 
 ![Pirâmide de testes](doc/pyramid.png)
 
-Em resumo, a pirâmide de testes é uma estratégia de divisão de testes no em um projeto. 
+Em resumo, a pirâmide de testes é uma estratégia de divisão de testes em um projeto. 
 
 Parte inferior: rápidos, baratos e isolados ao comportamento da aplicação. 
 Parte superior: lentos, caros e integrados.
@@ -22,7 +27,6 @@ Testes grandes são testes de ponta a ponta que validam as jornadas do usuário,
 20% testes medium ou integrados
 10% testes large ou end-to-end
 ```
-
 
 ### Testes unitários
 
@@ -65,18 +69,6 @@ fun greeterSaysHello() {
     * ViewMatchers: um conjunto de objetos que implementam a interface Matcher<? super View>. Você pode transmitir um ou mais deles ao método onView() para localizar uma visualização na hierarquia atual.
     * ViewActions: um conjunto de objetos ViewAction que podem ser transmitidos para o método ViewInteraction.perform(), como click().
     * ViewAssertions: um conjunto de objetos ViewAssertion que podem ser transmitidos ao método ViewInteraction.check(). Na maioria das vezes, você usará a declaração de correspondências, que usa um matcher de visualização para declarar o estado da visualização selecionada no momento.
-
-- Recurso "Espresso test recorder"
-    Gera o código de um teste do Espresso a partir de uma "Gravação" feita no emulador
-    
-    * Vantagens: 
-        - Ótimo para entender como o framework funciona
-        - Tirar dúvidas mais rapidamente e menor necessidade de consultar outras fontes
-        
-    * Desvantagens:
-        - O código gerado fica muito grande, por ter sido gerado de forma genérica
-        - Boa parte do código gerado é desnecessário
-        - Nem sempre o código gerado é válido
 
 
 #### Fontes:
