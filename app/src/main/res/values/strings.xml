@@ -11,5 +11,7 @@
     <string name="base_url">https://api.github.com</string>
     <string name="command">command</string>
     <string name="group_icon">Group icon</string>
+    <string name="fill_all_inputs">Fill all inputs!</string>
+    <string name="new_repo">New repo</string>
 
 </resources>

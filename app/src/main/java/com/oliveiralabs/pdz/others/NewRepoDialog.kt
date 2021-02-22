@@ -35,6 +35,7 @@ class NewRepoDialog :DialogFragment() {
             val inflater = requireActivity().layoutInflater
 
             builder.setView(inflater.inflate(R.layout.new_repo_dialog, null))
+                .setTitle(getString(R.string.new_repo))
                 .setPositiveButton(R.string.ok) { _, _ -> }
                 .setNegativeButton(R.string.cancel) { _, _ ->
                     dialog?.cancel()
@@ -52,15 +53,15 @@ class NewRepoDialog :DialogFragment() {
             val username = (d.findViewById<View>(R.id.etUsername) as EditText).text.toString()
             val repository = (d.findViewById<View>(R.id.etRepository) as EditText).text.toString()
 
-            if (validateName(username, d.context) && validateName(repository, d.context)) {
+            if (validateInput(username, d.context) && validateInput(repository, d.context)) {
                 listener.onDialogPositiveClick(d, username, repository)
             }
         }
     }
 
-    private fun validateName(input: String, ctx :Context) :Boolean {
+    private fun validateInput(input: String, ctx :Context) :Boolean {
         return if (input.isEmpty()) {
-            Toast.makeText(ctx, "Repo name can't by empty!", Toast.LENGTH_SHORT).show()
+            Toast.makeText(ctx, getString(R.string.fill_all_inputs), Toast.LENGTH_SHORT).show()
             false
         } else {
             true
