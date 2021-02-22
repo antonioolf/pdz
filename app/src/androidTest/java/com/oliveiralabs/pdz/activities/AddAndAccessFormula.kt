@@ -3,20 +3,11 @@ package com.oliveiralabs.pdz.activities
 
 import android.view.View
 import android.view.ViewGroup
-import androidx.recyclerview.widget.RecyclerView.ViewHolder
-import androidx.test.espresso.Espresso
-import androidx.test.espresso.Espresso.onView
-import androidx.test.espresso.action.ViewActions.*
-import androidx.test.espresso.contrib.RecyclerViewActions.actionOnItemAtPosition
-import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.filters.LargeTest
 import androidx.test.rule.ActivityTestRule
 import androidx.test.runner.AndroidJUnit4
-import com.oliveiralabs.pdz.R
 import org.hamcrest.Description
 import org.hamcrest.Matcher
-import org.hamcrest.Matchers.`is`
-import org.hamcrest.Matchers.allOf
 import org.hamcrest.TypeSafeMatcher
 import org.junit.Rule
 import org.junit.Test
@@ -32,7 +23,7 @@ class AddAndAccessFormula {
 
     @Test
     fun addAndAccessFormula() {
-        val floatingActionButton = onView(
+/*        val floatingActionButton = onView(
                 allOf(withId(R.id.fabAddRepo), withContentDescription("Add"),
                         childAtPosition(
                                 childAtPosition(
@@ -40,9 +31,9 @@ class AddAndAccessFormula {
                                         0),
                                 3),
                         isDisplayed()))
-        floatingActionButton.perform(click())
+        floatingActionButton.perform(click())*/
 
-        val appCompatEditText = onView(
+/*        val appCompatEditText = onView(
                 allOf(withId(R.id.etUsername),
                         childAtPosition(
                                 allOf(withId(R.id.newRepoDialog),
@@ -88,7 +79,7 @@ class AddAndAccessFormula {
                         childAtPosition(
                                 withClassName(`is`("androidx.cardview.widget.CardView")),
                                 0)))
-        recyclerView2.perform(actionOnItemAtPosition<ViewHolder>(1, click()))
+        recyclerView2.perform(actionOnItemAtPosition<ViewHolder>(1, click()))*/
     }
 
     private fun childAtPosition(
