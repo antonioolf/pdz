@@ -19,6 +19,7 @@ class MainActivityTestUI {
 
     @Test
     fun testAddNewRepo() {
+        /* Adiciona um novo repo e verifica se ele apareceu na listagem do spinner */
         TestActions.clickFabAddRepo()
         TestActions.fillNewRepoDialogField(R.id.etUsername, "ZupIT")
         TestActions.fillNewRepoDialogField(R.id.etRepository, "ritchie-formulas")

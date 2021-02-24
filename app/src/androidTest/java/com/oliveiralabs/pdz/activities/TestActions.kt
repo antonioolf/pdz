@@ -1,8 +1,10 @@
 package com.oliveiralabs.pdz.activities
 
+import androidx.recyclerview.widget.RecyclerView
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions.*
 import androidx.test.espresso.assertion.ViewAssertions.matches
+import androidx.test.espresso.contrib.RecyclerViewActions
 import androidx.test.espresso.matcher.ViewMatchers.*
 import com.oliveiralabs.pdz.R
 import org.hamcrest.CoreMatchers.containsString
@@ -29,6 +31,11 @@ class TestActions {
 
         fun assertSpinnerHaveItem(resSpinner: Int, itemTitle: String) {
             onView(withId(resSpinner)).check(matches(withSpinnerText(containsString(itemTitle))))
+        }
+
+        fun clickRecyclerViewAtPosition(recyclerviewRes: Int, index: Int) {
+            val recyclerView = onView(withId(recyclerviewRes))
+            recyclerView.perform(RecyclerViewActions.actionOnItemAtPosition<RecyclerView.ViewHolder>(index, click()))
         }
     }
 }
