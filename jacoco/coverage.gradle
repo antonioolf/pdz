@@ -1,0 +1,50 @@
+apply plugin: 'jacoco'
+
+task assembltestDebugUnitTest
+
+task jacocoTestReportTests(type: JacocoReport) {
+    group 'Reporting'
+    description 'Run tests and generate coverage report for instrumented and jvm tests'
+    dependsOn 'testDebugUnitTest'
+    dependsOn 'createDebugCoverageReport'
+
+    reports {
+        xml.enabled = true
+        html.enabled = true
+    }
+
+    classDirectories.from = fileTree(
+            dir: "${buildDir}/intermediates/classes/debug",
+            excludes: [
+                    '**/R.class',
+                    '**/R$*.class',
+                    '**/BuildConfig.*',
+                    '**/Manifest*.*',
+                    '**/*Test*.*',
+                    'android/**/*.*',
+                    '**/*_.*',
+                    '**/*_$*.*',
+                    '**/*_*'
+            ]
+    )
+    def coverageSourceDirs = ["src/main/java", "src/debug/java" ]
+    additionalSourceDirs.from = files(coverageSourceDirs)
+    sourceDirectories.from = files(coverageSourceDirs)
+
+    executionData.from = fileTree(dir: "$buildDir", includes: [
+            "jacoco/*.exec",
+            "outputs/code-coverage/connected/flavors/**/*.ec",
+            "outputs/code-coverage/connected/**.ec",
+    ])
+
+    doLast {
+        println "Jacoco report has been generated to file://${reports.html.destination}/index.html"
+    }
+}
+
+task testDebugUnitTestAssemble {
+    group 'Reporting'
+    dependsOn 'assembleDebugAndroidTest'
+    dependsOn 'assembleDebugUnitTest'
+    dependsOn 'testDebugUnitTest'
+}

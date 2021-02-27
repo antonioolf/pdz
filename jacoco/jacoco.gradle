@@ -1,0 +1,226 @@
+import javax.annotation.Nullable
+
+apply plugin: 'jacoco'
+
+task jacocoTestReport(type: JacocoReport) {
+    group 'Reporting'
+    description 'Run tests and generate coverage report for instrumented and jvm tests'
+    dependsOn 'testDebugUnitTest'
+    dependsOn 'createDebugCoverageReport'
+
+    reports {
+        xml.enabled = true
+        html.enabled = true
+        html.destination = file("$buildDir/reports/jacoco_coverage.html")
+    }
+
+    classDirectories.from = fileTree(
+            dir: "${buildDir}/intermediates/classes/debug",
+            excludes: [
+                    '**/R.class',
+                    '**/R$*.class',
+                    '**/BuildConfig.*',
+                    '**/Manifest*.*',
+                    '**/*Test*.*',
+                    'android/**/*.*',
+                    '**/*_.*',
+                    '**/*_$*.*',
+                    '**/*_*'
+            ]
+    )
+    def coverageSourceDirs = [
+            "../app/src/main/java",
+            "../app/src/debug/java"
+    ]
+    additionalSourceDirs.from = files(coverageSourceDirs)
+    sourceDirectories.from = files(coverageSourceDirs)
+    classDirectories.from = files(coverageSourceDirs)
+
+    executionData.from = fileTree(dir: "$buildDir", includes: [
+            "jacoco/*.exec",
+            "outputs/code-coverage/connected/flavors/**/*.ec",
+            "outputs/code-coverage/connected/**.ec",
+    ])
+
+    doLast {
+        println "Jacoco report has been generated to ${reports.html.destination}"
+    }
+}
+
+task jacocoMixedTestReport {
+    group 'Reporting'
+    description 'Run tests and generate coverage report for instrumented and jvm tests'
+    dependsOn 'testDebugUnitTest'
+    dependsOn 'createDebugCoverageReport'
+    dependsOn 'mixJacocoReports'
+}
+
+task mixJacocoReports(type: JacocoReport) {
+    group 'Reporting'
+    description 'Run tests and generate coverage report for instrumented and jvm tests'
+
+    reports {
+        xml.enabled = true
+        csv.enabled = true
+        html.enabled = true
+        html.destination = file("$buildDir/reports/jacoco_coverage.html")
+    }
+
+    classDirectories.from = fileTree(
+            dir: "${buildDir}/intermediates/classes/debug",
+            excludes: [
+                    '**/R.class',
+                    '**/R$*.class',
+                    '**/BuildConfig.*',
+                    '**/Manifest*.*',
+                    '**/*Test*.*',
+                    'android/**/*.*',
+                    '**/*_.*',
+                    '**/*_$*.*',
+                    '**/*_*'
+            ]
+    )
+    def coverageSourceDirs = ["src/main/java", "src/debug/java"]
+    additionalSourceDirs.from = files(coverageSourceDirs)
+    sourceDirectories.from = files(coverageSourceDirs)
+
+    executionData.from = fileTree(dir: "$buildDir", includes: [
+            "jacoco/*.exec",
+            "outputs/code-coverage/connected/flavors/**/*.ec",
+            "outputs/code-coverage/connected/**.ec",
+            "tmp/tests/*.exec",
+            "tmp/tests/*.ec",
+    ])
+
+    doLast {
+        println "Jacoco report has been generated to file://${reports.destination}/index.html"
+    }
+}
+
+class CoverageLine {
+    final String group
+    final String packageName
+    final String className
+    final Integer instruction_missed
+    final Integer instruction_covered
+    final Integer branch_missed
+    final Integer branch_covered
+    final Integer line_missed
+    final Integer line_covered
+    final Integer complexity_missed
+    final Integer complexity_covered
+    final Integer method_missed
+    final Integer method_covered
+
+    final Integer instructionTotal
+    final Double instructionCoverage
+    final String lastPackageName
+
+    CoverageLine(String group, String packageName, String className,
+                 Integer instruction_missed, Integer instruction_covered, Integer branch_missed,
+                 Integer branch_covered, Integer line_missed, Integer line_covered,
+                 Integer complexity_missed, Integer complexity_covered,
+                 Integer method_missed, Integer method_covered) {
+        this.group = group
+        this.packageName = packageName
+        this.className = className
+        this.instruction_missed = instruction_missed
+        this.instruction_covered = instruction_covered
+        this.branch_missed = branch_missed
+        this.branch_covered = branch_covered
+        this.line_missed = line_missed
+        this.line_covered = line_covered
+        this.complexity_missed = complexity_missed
+        this.complexity_covered = complexity_covered
+        this.method_missed = method_missed
+        this.method_covered = method_covered
+
+        this.instructionTotal = instruction_missed + instruction_covered
+        this.instructionCoverage = (instructionTotal - instruction_missed) * 100 / instructionTotal
+        this.lastPackageName = packageName.split("\\.").last()
+    }
+
+    CoverageLine plus(CoverageLine other) {
+        return new CoverageLine(
+                group, packageName, null,
+                instruction_missed + other.instruction_missed,
+                instruction_covered + other.instruction_covered,
+                branch_missed + other.branch_missed,
+                branch_covered + other.branch_covered,
+                line_missed + other.line_missed,
+                line_covered + other.line_covered,
+                complexity_missed + other.complexity_missed,
+                complexity_covered + other.complexity_covered,
+                method_missed + other.method_missed,
+                method_covered + other.method_covered
+        )
+    }
+}
+
+task listFeatures() {
+
+    doLast {
+        def featureDirs = new File("app/src/main/java/com/itau/empresas/feature")
+                .listFiles((FileFilter) { file -> file.isDirectory() })
+                .sort()
+        println "\nFeature count ${featureDirs.size()}"
+        for (dir in featureDirs) {
+            println " ${dir.name}"
+        }
+    }
+}
+
+@Nullable
+private static String findStartingWith(List<String> features, String packageName) {
+    for (s in features)
+        if (packageName.startsWith(s))
+            return s
+    return null
+}
+
+task coverageByFeature() {
+    mustRunAfter 'jacocoMixedTestReport', 'mixJacocoReports', 'jacocoTestReport'
+
+    doLast {
+        def featureDirs = new File("app/src/main/java/com/itau/empresas/feature")
+                .listFiles((FileFilter) { file -> file.isDirectory() })
+                .collect { "com.itau.empresas.feature.${it.name}" }
+                .sort()
+                .reverse()
+
+        def coverageLines = new LinkedHashMap<String, CoverageLine>()
+        def coverageLinesOthers = new LinkedHashMap<String, CoverageLine>()
+        boolean first = true
+        new File("$buildDir/reports/jacoco/mixJacocoReports/mixJacocoReports.csv").splitEachLine(",") { fields ->
+            if (first) {
+                first = false
+                return
+            }
+            def coverage = new CoverageLine(
+                    fields[0], fields[1], fields[2], Integer.valueOf(fields[3]),
+                    Integer.valueOf(fields[4]), Integer.valueOf(fields[5]),
+                    Integer.valueOf(fields[6]), Integer.valueOf(fields[7]),
+                    Integer.valueOf(fields[8]), Integer.valueOf(fields[9]),
+                    Integer.valueOf(fields[10]), Integer.valueOf(fields[11]),
+                    Integer.valueOf(fields[12])
+            )
+
+            def packageName = findStartingWith(featureDirs, coverage.packageName)
+            if (packageName != null) {
+                if (coverageLines.containsKey(packageName))
+                    coverage = coverageLines.get(packageName) + coverage
+                coverageLines.put(packageName, coverage)
+            } else {
+                if (coverageLinesOthers.containsKey(coverage.packageName))
+                    coverage = coverageLinesOthers.get(coverage.packageName) + coverage
+                coverageLinesOthers.put(coverage.packageName, coverage)
+            }
+        }
+        coverageLines += coverageLinesOthers
+        coverageLines.collect { k, c -> String.format("${k}, %05.2f", c.instructionCoverage) }
+                .sort()
+                .forEach { s ->
+            println s
+        }
+    }
+}
