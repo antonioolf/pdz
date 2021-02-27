@@ -27,7 +27,7 @@ class AddAndAccessFormula {
 
         Espresso.registerIdlingResources(mActivityTestRule.activity.getCountingIdlingResource())
 
-        TestActions.clickRecyclerViewAtPosition(R.id.rvGroup, 3)
-        TestActions.clickRecyclerViewAtPosition(R.id.rvFormulas, 0)
+//        TestActions.clickRecyclerViewAtPosition(R.id.rvGroup, 3)
+//        TestActions.clickRecyclerViewAtPosition(R.id.rvFormulas, 0)
     }
 }
