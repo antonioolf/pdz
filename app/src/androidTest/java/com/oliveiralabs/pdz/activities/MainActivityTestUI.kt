@@ -23,7 +23,7 @@ class MainActivityTestUI {
         TestActions.clickFabAddRepo()
         TestActions.fillNewRepoDialogField(R.id.etUsername, "ZupIT")
         TestActions.fillNewRepoDialogField(R.id.etRepository, "ritchie-formulas")
-        TestActions.clickButtonWithTextOk()
+        TestActions.clickButtonWithText("OK")
         TestActions.assertSpinnerHaveItem(R.id.spinnerRepo, "ZupIT / ritchie-formulas")
     }
 
@@ -31,7 +31,14 @@ class MainActivityTestUI {
     fun testNewRepoFormValidation() {
         /* Abre dialog e clican em OK sem preencher os campos para validar */
         TestActions.clickFabAddRepo()
-        TestActions.clickButtonWithTextOk()
+        TestActions.clickButtonWithText("OK")
         TestActions.assertNewRepoDialogOpen()
+    }
+
+    @Test
+    fun cancelNewRepoRegister() {
+        TestActions.clickFabAddRepo()
+        TestActions.clickButtonWithText("CANCEL")
+        TestActions.assertNewRepoDialogClosed()
     }
 }

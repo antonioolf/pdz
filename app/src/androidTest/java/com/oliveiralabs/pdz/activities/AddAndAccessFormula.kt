@@ -23,7 +23,7 @@ class AddAndAccessFormula {
         TestActions.clickFabAddRepo()
         TestActions.fillNewRepoDialogField(R.id.etUsername, "ZupIT")
         TestActions.fillNewRepoDialogField(R.id.etRepository, "ritchie-formulas")
-        TestActions.clickButtonWithTextOk()
+        TestActions.clickButtonWithText("OK")
 
         IdlingRegistry.getInstance().register(mActivityTestRule.activity.getCountingIdlingResource());
 

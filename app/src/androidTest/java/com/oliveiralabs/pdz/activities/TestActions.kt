@@ -3,6 +3,7 @@ package com.oliveiralabs.pdz.activities
 import androidx.recyclerview.widget.RecyclerView
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions.*
+import androidx.test.espresso.assertion.ViewAssertions.doesNotExist
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.contrib.RecyclerViewActions
 import androidx.test.espresso.matcher.ViewMatchers.*
@@ -17,12 +18,16 @@ class TestActions {
             onView(Matchers.allOf(withId(R.id.fabAddRepo), isDisplayed())).perform(click())
         }
 
-        fun clickButtonWithTextOk() {
-            onView(withText("OK")).perform(scrollTo(), click())
+        fun clickButtonWithText(text :String) {
+            onView(withText(text)).perform(scrollTo(), click())
         }
 
         fun assertNewRepoDialogOpen() {
             onView(withText(R.string.new_repo)).check(matches(isDisplayed()))
+        }
+
+        fun assertNewRepoDialogClosed() {
+            onView(withText(R.string.new_repo)).check(doesNotExist())
         }
 
         fun fillNewRepoDialogField(resource: Int, value: String) {
