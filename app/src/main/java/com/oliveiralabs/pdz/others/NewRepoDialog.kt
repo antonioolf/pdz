@@ -22,11 +22,7 @@ class NewRepoDialog :DialogFragment() {
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        try {
-            listener = context as NewRepoDialogListener
-        } catch (e: ClassCastException) {
-            throw ClassCastException(("$context must implement NoticeDialogListener"))
-        }
+        listener = context as NewRepoDialogListener
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {

@@ -5,7 +5,6 @@ plugins {
     id 'jacoco'
 }
 
-apply from: "$rootDir/jacoco/jacoco.gradle"
 apply from: "$rootDir/jacoco/coverage.gradle"
 
 android {

@@ -10,7 +10,6 @@ import com.oliveiralabs.pdz.R
 import com.oliveiralabs.pdz.adapters.FormulasAdapter
 import com.oliveiralabs.pdz.models.Formula
 
-
 class FormulasDialog :DialogFragment() {
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
