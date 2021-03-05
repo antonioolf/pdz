@@ -6,6 +6,8 @@ import androidx.test.filters.LargeTest
 import androidx.test.rule.ActivityTestRule
 import androidx.test.runner.AndroidJUnit4
 import com.oliveiralabs.pdz.R
+import org.junit.After
+import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -18,6 +20,11 @@ class AddAndAccessFormula {
     @JvmField
     var mActivityTestRule = ActivityTestRule(MainActivity::class.java)
 
+    @Before
+    fun init() {
+        IdlingRegistry.getInstance().register(mActivityTestRule.activity.getCountingIdlingResource())
+    }
+
     @Test
     fun addAndAccessFormula() {
         TestActions.clickFabAddRepo()
@@ -25,9 +32,12 @@ class AddAndAccessFormula {
         TestActions.fillNewRepoDialogField(R.id.etRepository, "ritchie-formulas")
         TestActions.clickButtonWithText("OK")
 
-        IdlingRegistry.getInstance().register(mActivityTestRule.activity.getCountingIdlingResource());
-
         TestActions.clickRecyclerViewAtPosition(R.id.rvGroup, 3)
         TestActions.clickRecyclerViewAtPosition(R.id.rvFormulas, 0)
+    }
+
+    @After
+    fun end() {
+        IdlingRegistry.getInstance().unregister(mActivityTestRule.activity.getCountingIdlingResource())
     }
 }
