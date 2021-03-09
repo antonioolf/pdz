@@ -29,12 +29,6 @@ class MainActivityTest {
         assertEquals(tvEmptyRepoList.text, expectedStr)
     }
 
-
-    @Test
-    fun `test open formulas dialog on click in group`() {
-
-    }
-
     @Test
     fun `test dialog add repo appears on button click`() {
         val controller = Robolectric.buildActivity(MainActivity::class.java)

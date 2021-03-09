@@ -32,7 +32,7 @@ class AddAndAccessFormula {
         TestActions.fillNewRepoDialogField(R.id.etRepository, "ritchie-formulas")
         TestActions.clickButtonWithText("OK")
 
-        TestActions.clickRecyclerViewAtPosition(R.id.rvGroup, 3)
+        TestActions.clickRecyclerViewAtPosition(R.id.rvGroup, 0)
         TestActions.clickRecyclerViewAtPosition(R.id.rvFormulas, 0)
     }
 
