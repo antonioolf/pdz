@@ -1,5 +1,16 @@
 ## PDZ - Testes no Android
 
+Projeto desenvolvido com o intuito de aprofundar o conhecimento em testes no Android.
+
+### Proposta do aplicativo
+
+Portal de fórmulas do Ritchie CLI para Android que suporta múltiplos repositórios.
+
+Funcionalidades:
+- Adicionar repositórios
+- Navegar pelos comandos existentes
+- Visualizar a documentações das fórmulas.
+
 ### Conceitos
 
 * Testes unitários
